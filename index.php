@@ -8,12 +8,18 @@ while(true) {
 		print_r(socket_strerror(socket_last_error())).PHP_EOL;
 	}
 	socket_recvfrom($socket, $buf, 65535, 0, $clientIP, $clientPort);
-	
-for($i = 0; $i < strlen($buf); $i++)
+
+$a = "";
+# Transaction ID
+for($i = 0; $i < 2; $i++)
 {
-echo strval(dechex(ord($buf[$i])))." ";
+	var_dump($buf[$i]);
+	$a .= dechex(strval(ord($buf[$i])))." ";
+
 }
 
+# Get the flags
+	var_dump($a) .PHP_EOL;
 	
    $stz = bin2hex($buf);
 
