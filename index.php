@@ -20,8 +20,10 @@ $port = 0;
 $bytes_received = socket_recvfrom($rSocket, $buf, 65536, 0, $from);
 
 white (true) {
-	var_dump($bytes_received);
-	sleep(2);
+	
+	#print_r( $bytes_received );
+	#print $bytes_received;
+	sleep(1);
 }
 #echo "Received $buf from remote address $from and remote port $port" . PHP_EOL;
 
