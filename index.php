@@ -28,8 +28,8 @@ var_dump($k);
 				var_dump(['tx id:', $sTxId]);
 			break;
 			case 2:
-				$aFields = str_split($sField);
 				#1 QR, 4 Opcode, 1 AA, 1 TC, 1 RD
+				$aFields = str_split($sField);
 				$aQuery = array(
 					'QR' => base_convert($aFields[0], 2, 16),
 					'Opcode' => base_convert(implode(array_slice($aFields, 1, 4)), 2, 16),
@@ -39,8 +39,20 @@ var_dump($k);
 				);
 				var_dump(['2 query:', $aQuery]);
 			break;
-			case 2:
-				echo "i equals 2";
+			case 3:
+				# 1 RA, 3 Z, 4 RCODE
+				$aFields = str_split($sField);
+				var_dump(array(
+					'RA' => base_convert($aFields[1], 2, 16),
+					'Z' => array_slice($aFields, 1, 3),
+					'RCODE' => array_slice($aFields, 4, 4),
+				));
+				$aQuery = array(
+					'RA' => base_convert($aFields[1], 2, 16),
+					'Z' => base_convert(implode(array_slice($aFields, 1, 3)), 2, 16),
+					'RCODE' => base_convert(implode(array_slice($aFields, 4, 4)), 2, 16),
+				);
+				var_dump(['3 query:', $aQuery]);
 			break;
 		}
 	}
