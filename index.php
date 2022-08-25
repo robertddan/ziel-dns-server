@@ -8,7 +8,15 @@ while(true) {
 		print_r(socket_strerror(socket_last_error())).PHP_EOL;
 	}
 	socket_recvfrom($socket, $buf, 65535, 0, $clientIP, $clientPort);
+	
+for($i = 0; $i < strlen($buf); $i++)
+{
+echo strval(dechex(ord($buf[$i])))." ";
+}
+
+	
    $stz = bin2hex($buf);
+
    $tx = "";
    for($i=0;$i<(strlen($stz)-26-10)/2;$i++)
    {
