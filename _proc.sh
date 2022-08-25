@@ -1,1 +1,1 @@
-sudo apt install nethogs
+sudo systemd-resolve --status

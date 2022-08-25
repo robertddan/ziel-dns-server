@@ -2,4 +2,6 @@
 ps aux | grep php
 pkill -9 php
 ps aux | grep php
-php index.php & dig suiteziel.com @127.0.0.1
+
+#php index.php & dig +trace +answer +multiline suiteziel.com @127.0.0.1 #ANY 
+php index.php & dig suiteziel.com @127.0.0.1 
