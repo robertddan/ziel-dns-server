@@ -95,14 +95,14 @@ while(true) {
 				$sTxIdab .= base_convert($sField, 2, 16);
 				var_dump(['a b ARCOUNT:', $sTxIdab]);
 			break;
-			case 12 /*($k >= 12)*/: # question
+			case 12: # domain count
 				 
 				if (!isset($sQcount)) $sQcount = "";
 				$sQcount = base_convert($sField, 2, 10);
 				$k_q = (int) $sQcount;
 				$k_qn = 0;
 				
-				var_dump(['$k_q '.$k, $k_q]);
+				var_dump('$k_q '.$k, implode([$k_q]));
 				/*
 				if (!isset($sTxIdab)) $sTxIdab = "";
 				$sTxIdab .= base_convert($sField, 2, 16);
@@ -124,13 +124,14 @@ while(true) {
 				*/
 				
 			break;
-			case (13 + $k_qn):
+			case (13 + $k_qn): #name
 				if ($k_qn <= (13 + $k_q)) $k_qn = $k_qn + 1;
 				
 				if (!isset($sQname)) $sQname = "";
 				$sQname = base_convert($sField, 2, 10);
 				
-				var_dump(['$sQname '.$k, $sQname]);
+				var_dump('$k_qn '.$k, $k_qn));
+				var_dump('$sQname '.$k, implode([$sQname]));
 			break;
 		}
 		
