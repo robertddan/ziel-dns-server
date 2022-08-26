@@ -131,7 +131,7 @@ while(true) {
 				$sQname = base_convert($sField, 2, 10);
 				
 				var_dump('$k_qn '.$k, $k_qn);
-				var_dump('$sQname '.$k, implode([$sQname]));
+				var_dump('$sQname '.$k, chr($sQname));
 			break;
 		}
 		
