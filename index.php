@@ -99,12 +99,12 @@ while(true) {
 			break;
 			case 12: # subdomain count
 				 
-				if (!isset($sQcount)) $sQcount = "";
-				$sQcount = base_convert($sField, 2, 10);
-				$k_q = (int) $sQcount;
-				$k_qn = 1;
+				#if (!isset($sQSDcount)) $sQSDcount = "";
+				$sQSDcount = base_convert($sField, 2, 10);
+				$k_qscn = (int) $sQSDcount;
+				$k_qsc = 1;
 				
-				var_dump(['$k_q '.$k, implode([$k_q]), $k_qn]);
+				var_dump(implode(['subdomain count '.$k, " ", $k_qsc, " sQSDcount: ", $sQSDcount, " k_qsc ", $k_qsc]));
 				/*
 				if (!isset($sTxIdab)) $sTxIdab = "";
 				$sTxIdab .= base_convert($sField, 2, 16);
@@ -126,22 +126,27 @@ while(true) {
 				*/
 				
 			break;
-			case (12 + $k_qn): # subdomain name (www)
-				if ($k_qn < $k_q) $k_qn = $k_qn + 1;
+			case (12 + $k_qsc): # subdomain name (www)
+				if ($k_qsc < $k_qscn) $k_qsc = $k_qsc + 1;
 				
 				if (!isset($sQname)) $sQname = "";
 				$aQname[] = chr(base_convert($sField, 2, 10));
 				$sQname = implode($aQname);
 				
-				var_dump(implode(['$k_qn '.$k, " ", $k_qn, " sField: ", $sField, " k_q ", $k_q]));
-				var_dump(implode(['$sQname '.$k, " sQname ", $sQname, " k_q ", $k_q]));
+				$k_qdc = $k + 1;
+				
+				var_dump(implode(['subdomain name'.$k, " k_qdc ", $k_qdc, " sQname: ", $sQname, " k_qsc ", $k_qsc]));
+				#var_dump(implode(['$sQname '.$k, " sQname ", $sQname, " k_q ", $k_q]));
 			break;
-			case ($k > (12 + $k_q)): # domain count
-		
-				var_dump(implode(['domain count '.$k, " ", $k_qn, " k_q ", $k_q]));
+			case ($k == $k_qdc): # domain count
+				#if (!isset($sSDcount)) $sQcount = "";
+				$sQDcount = base_convert($sField, 2, 10);
+				$k_qscn = (int) $sQDcount;
+				$k_qsc = 1;
+				var_dump(implode(['domain count '.$k, " ", $k_qscn, " sQDcount ", $sQDcount]));
 			break;
-			case ($k > (12 + $k_q)): # domain name
-				var_dump(implode(['domain name '.$k, " ", $k_qn, " k_q ", $k_q]));
+			case ($k > $k_qdc): # domain name
+				var_dump(implode(['domain name '.$k, " ", $k_qsc, " k_qsc ", $k_qsc]));
 			break;
 		}
 		
