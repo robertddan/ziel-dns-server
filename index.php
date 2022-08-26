@@ -136,11 +136,11 @@ while(true) {
 				var_dump(implode(['$k_qn '.$k, " ", $k_qn, " sField: ", $sField, " k_q ", $k_q]));
 				var_dump(implode(['$sQname '.$k, " sQname ", $sQname, " k_q ", $k_q]));
 			break;
-			case $k > (12 + $k_q): # domain count
+			case ($k > (12 + $k_q)): # domain count
 		
 				var_dump(implode(['domain count '.$k, " ", $k_qn, " k_q ", $k_q]));
 			break;
-			case (12 + $k_q): # domain name
+			case ($k > (12 + $k_q)): # domain name
 				var_dump(implode(['domain name '.$k, " ", $k_qn, " k_q ", $k_q]));
 			break;
 		}
