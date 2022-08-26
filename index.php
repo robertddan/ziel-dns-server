@@ -132,18 +132,18 @@ while(true) {
 			case ($k == $k_qdnc): # top-level domain count
 				$sQTLDcount = base_convert($sField, 2, 10);
 				$k_qtldcn = (int) $sQTLDcount;
-				#$k_qtldc = $k + 1;
-				#$k_qtldcf = $k_qtldc + $sQTLDcount;
+				$k_qtldc = $k + 1;
+				$k_qtldcf = $k_qtldc + $sQTLDcount;
 				var_dump(implode(['top-level domain count '.$k, " ", $k_qtldcn, " sQTLDcount ", $sQTLDcount]));
 			break;
-			case ($k >= $k_qdc && $k < $k_qdcf): # top-level domain name (com)
-				if ($k_qsc < $k_qscn) $k_qsc = $k_qsc + 1;
+			case ($k >= $k_qtldc && $k < $k_qtldcf): # top-level domain name (com)
+				if ($k_qtldc < $k_qtldcn) $k_qtldc = $k_qtldc + 1;
 				#if (!isset($sQname)) $sQSname = "";
 				$aQDname[] = chr(base_convert($sField, 2, 10));
 				$sQDname = implode($aQDname);
-				$k_qdnc = $k + 1;
+				$k_qtldnc = $k + 1;
 				
-				var_dump(implode(['subdomain name'.$k, " k_qdc ", $k_qdc, " sQDname: ", $sQDname, " k_qsc ", $k_qsc]));
+				var_dump(implode(['subdomain name'.$k, " k_qtldc ", $k_qtldc, " sQDname: ", $sQDname, " k_qtldnc ", $k_qtldnc]));
 			break;
 		}
 		
