@@ -37,6 +37,8 @@ while(true) {
     |                    ARCOUNT                    |
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 */
+	$aQname = array();
+	$sTxId = "";
 	foreach($aBuffer as $k => $sField)
 	{
 		$aaTx[$k] = base_convert($sField, 2, 10);
@@ -95,14 +97,14 @@ while(true) {
 				$sTxIdab .= base_convert($sField, 2, 16);
 				var_dump(['a b ARCOUNT:', $sTxIdab]);
 			break;
-			case 12: # domain count
+			case 12: # subdomain count
 				 
 				if (!isset($sQcount)) $sQcount = "";
 				$sQcount = base_convert($sField, 2, 10);
 				$k_q = (int) $sQcount;
-				$k_qn = 0;
+				$k_qn = 1;
 				
-				var_dump('$k_q '.$k, implode([$k_q]));
+				var_dump(['$k_q '.$k, implode([$k_q]), $k_qn]);
 				/*
 				if (!isset($sTxIdab)) $sTxIdab = "";
 				$sTxIdab .= base_convert($sField, 2, 16);
@@ -124,14 +126,22 @@ while(true) {
 				*/
 				
 			break;
-			case (13 + $k_qn): #name
-				if ($k_qn <= (13 + $k_q)) $k_qn = $k_qn + 1;
+			case (12 + $k_qn): # subdomain name (www)
+				if ($k_qn < $k_q) $k_qn = $k_qn + 1;
 				
 				if (!isset($sQname)) $sQname = "";
-				$sQname = base_convert($sField, 2, 10);
+				$aQname[] = chr(base_convert($sField, 2, 10));
+				$sQname = implode($aQname);
 				
-				var_dump('$k_qn '.$k, $k_qn);
-				var_dump('$sQname '.$k, chr($sQname));
+				var_dump(implode(['$k_qn '.$k, " ", $k_qn, " sField: ", $sField, " k_q ", $k_q]));
+				var_dump(implode(['$sQname '.$k, " sQname ", $sQname, " k_q ", $k_q]));
+			break;
+			case $k > (12 + $k_q): # domain count
+		
+				var_dump(implode(['domain count '.$k, " ", $k_qn, " k_q ", $k_q]));
+			break;
+			case (12 + $k_q): # domain name
+				var_dump(implode(['domain name '.$k, " ", $k_qn, " k_q ", $k_q]));
 			break;
 		}
 		
