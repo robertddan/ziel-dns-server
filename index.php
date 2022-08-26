@@ -49,6 +49,8 @@
 
 	$aQSDname = $aQDname = $aQTLDname = array();
 	$sTxId = $sTxId45 = $sTxId67 = $sTxId89 = $sTxIdab = "";
+	
+	$iCount = 0;
 	$aMessage = array(
 		'HEADER' => array(
 			'ID' => array(),
@@ -85,6 +87,7 @@
 	 3 , 'w', 'w', 'w',                 // QUESTION: QNAME: label 1
 	 6 , 'g', 'o', 'o', 'g', 'l', 'e',  // QUESTION: QNAME: label 2
 	 3 , 'c', 'o', 'm',                 // QUESTION: QNAME: label 3
+	 
 	 0 ,                                // QUESTION: QNAME: null label
 	 0 ,  1 ,                           // QUESTION: QTYPE
 	 0 ,  1                             // QUESTION: QCLASS
@@ -106,8 +109,8 @@
 				#1 QR, 4 Opcode, 1 AA, 1 TC, 1 RD
 				$aFields = str_split($sField);
 				array_push($aMessage['HEADER']['Various']['QR'], base_convert($sField[0], 2, 16));
-				var_dump( ...array_map('bindec', array_slice($aFields, 1, 4)) );
-				array_push($aMessage['HEADER']['Various']['Opcode'], ...array_map('bindec', array_slice($aFields, 1, 4)) ); #function($sMapField) { return base_convert($sMapField, 2, 10); }
+				#var_dump( ...array_map('bindec', array_slice($aFields, 1, 4)) );
+				array_push($aMessage['HEADER']['Various']['Opcode'], ...array_map(function($sMapField) { return base_convert($sMapField, 2, 10); }, array_slice($aFields, 1, 4)) );
 				array_push($aMessage['HEADER']['Various']['AA'], base_convert($aFields[5], 2, 10));
 				array_push($aMessage['HEADER']['Various']['TC'], base_convert($aFields[6], 2, 10));
 				array_push($aMessage['HEADER']['Various']['RD'], base_convert($aFields[7], 2, 10));
@@ -117,8 +120,10 @@
 				# 1 RA, 3 Z, 4 RCODE
 				$aFields = str_split($sField);
 				array_push($aMessage['HEADER']['Various']['RA'], base_convert($aFields[1], 2, 10));
-				$aMessage['HEADER']['Various']['Z'] = base_convert(implode(array_slice($aFields, 1, 3)), 2, 10);
-				$aMessage['HEADER']['Various']['RCODE'] = base_convert(implode(array_slice($aFields, 4, 4)), 2, 10);
+				array_push($aMessage['HEADER']['Various']['Z'], ...array_map(function($sMapField) { return base_convert($sMapField, 2, 10); }, array_slice($aFields, 1, 3)) );
+				#$aMessage['HEADER']['Various']['Z'] = base_convert(implode(array_slice($aFields, 1, 3)), 2, 10);
+				array_push($aMessage['HEADER']['Various']['RCODE'], ...array_map(function($sMapField) { return base_convert($sMapField, 2, 10); }, array_slice($aFields, 4, 4)) );
+				#$aMessage['HEADER']['Various']['RCODE'] = base_convert(implode(array_slice($aFields, 4, 4)), 2, 10);
 				
 				var_dump(['3 HEADER:', $aMessage['HEADER']['Various']]);
 			break;
@@ -149,6 +154,7 @@
 				$sQSDcount = base_convert($sField, 2, 10);
 				$k_qscn = (int) $sQSDcount;
 				$k_qsc = 1;
+				$k_qscf = $k_qsc + $k_qscn;
 				
 				var_dump(implode(['subdomain count '.$k, " ", $k_qsc, " sQSDcount: ", $sQSDcount, " k_qsc ", $k_qsc]));
 			break;
@@ -159,13 +165,16 @@
 				$sQSDname = implode($aQSDname);
 				$k_qsdc = $k + 1;
 				
+				array_push($aMessage['QUESTION']['QNAME'], $aQSDname);
+				var_dump(['QUESTION QNAME:', $aMessage['QUESTION']['QNAME']]);
+				
 				var_dump(implode(['subdomain name'.$k, " k_qdc ", $k_qsdc, " sQSDname: ", $sQSDname, " k_qsc ", $k_qsc]));
 			break;
 			case ($k == $k_qsdc): # domain count
 				$sQDcount = base_convert($sField, 2, 10);
 				$k_qdcn = (int) $sQDcount;
 				$k_qdc = $k + 1;
-				$k_qdcf = $k_qdc + $sQDcount;
+				$k_qdcf = $k_qdc + $k_qdcn;
 				var_dump(implode(['domain count '.$k, " ", $k_qdcn, " sQDcount ", $sQDcount]));
 			break;
 			case ($k >= $k_qdc && $k < $k_qdcf): # domain name (suiteziel)
@@ -181,7 +190,7 @@
 				$sQTLDcount = base_convert($sField, 2, 10);
 				$k_qtldcn = (int) $sQTLDcount;
 				$k_qtldc = $k + 1;
-				$k_qtldcf = $k_qtldc + $sQTLDcount;
+				$k_qtldcf = $k_qtldc + $k_qtldcn;
 				var_dump(implode(['top-level domain count '.$k, " ", $k_qtldcn, " sQTLDcount ", $sQTLDcount]));
 			break;
 			case ($k >= $k_qtldc && $k < $k_qtldcf): # top-level domain name (com)
