@@ -37,7 +37,7 @@ while(true) {
     |                    ARCOUNT                    |
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 */
-	$aQname = array();
+	$aQSDname = $aQDname = array();
 	$sTxId = "";
 	foreach($aBuffer as $k => $sField)
 	{
@@ -109,28 +109,45 @@ while(true) {
 				#if (!isset($sQSDname)) $sQSDname = "";
 				$aQSDname[] = chr(base_convert($sField, 2, 10));
 				$sQSDname = implode($aQSDname);
-				$k_qdc = $k + 1;
+				$k_qsdc = $k + 1;
 				
-				var_dump(implode(['subdomain name'.$k, " k_qdc ", $k_qdc, " sQSDname: ", $sQSDname, " k_qsc ", $k_qsc]));
+				var_dump(implode(['subdomain name'.$k, " k_qdc ", $k_qsdc, " sQSDname: ", $sQSDname, " k_qsc ", $k_qsc]));
 			break;
-			case ($k == $k_qdc): # domain count
+			case ($k == $k_qsdc): # domain count
 				$sQDcount = base_convert($sField, 2, 10);
 				$k_qdcn = (int) $sQDcount;
 				$k_qdc = $k + 1;
+				$k_qdcf = $k_qdc + $sQDcount;
 				var_dump(implode(['domain count '.$k, " ", $k_qdcn, " sQDcount ", $sQDcount]));
 			break;
-			case ($k >= $k_qdc): # domain name
+			case ($k >= $k_qdc && $k < $k_qdcf): # domain name (suiteziel)
 				if ($k_qsc < $k_qscn) $k_qsc = $k_qsc + 1;
 				#if (!isset($sQname)) $sQSname = "";
 				$aQDname[] = chr(base_convert($sField, 2, 10));
 				$sQDname = implode($aQDname);
-				$k_qdc = $k + 1;
+				$k_qdnc = $k + 1;
 				
 				var_dump(implode(['subdomain name'.$k, " k_qdc ", $k_qdc, " sQDname: ", $sQDname, " k_qsc ", $k_qsc]));
-				var_dump(implode(['domain name '.$k, " ", $k_qsc, " k_qsc ", $k_qsc]));
+			break;
+			case ($k == $k_qdnc): # top-level domain count
+				$sQTLDcount = base_convert($sField, 2, 10);
+				$k_qtldcn = (int) $sQTLDcount;
+				#$k_qtldc = $k + 1;
+				#$k_qtldcf = $k_qtldc + $sQTLDcount;
+				var_dump(implode(['top-level domain count '.$k, " ", $k_qtldcn, " sQTLDcount ", $sQTLDcount]));
+			break;
+			case ($k >= $k_qdc && $k < $k_qdcf): # top-level domain name (com)
+				if ($k_qsc < $k_qscn) $k_qsc = $k_qsc + 1;
+				#if (!isset($sQname)) $sQSname = "";
+				$aQDname[] = chr(base_convert($sField, 2, 10));
+				$sQDname = implode($aQDname);
+				$k_qdnc = $k + 1;
+				
+				var_dump(implode(['subdomain name'.$k, " k_qdc ", $k_qdc, " sQDname: ", $sQDname, " k_qsc ", $k_qsc]));
 			break;
 		}
 		
+		var_dump(implode(array($k.' $sField: ', $sField)));
 	}
 	#var_dump(array('$aBuffer', $aBuffer));
 	var_dump(implode(" ", $aBuffer));
