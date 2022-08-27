@@ -207,19 +207,20 @@ var_dump('$ak_label', $ak_label);
 				var_dump(['ak_label', $ak_label, 'QUESTION QNAME:', $aMessage['QUESTION']['QNAME']]);
 			break;
 			case ($k == $k_qtldcf): # End domain
+				$k_qtype= $k_qtldcf + 1;
 				var_dump(['End domain:'. $k . " ", base_convert($sField, 2, 16)]);
 			break;
 				
 				
-			case ($k == $k_qtldcf):  # QTYPE
-			case ($k == $k_qtldcf + 1):
-				$k_q = $k_qtldcf + 1;
+			case ($k == $k_qtype):  # QTYPE
+			case ($k == ($k_qtype + 1)):
+				$k_qclass = $k_qtype + 2;
 				array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
 				var_dump(['QUESTION QTYPE:'. $k . " ", $aMessage['QUESTION']['QTYPE']]);
 			break;
 				
-			case ($k == $k_q): # QCLASS
-			case ($k == $k_q + 1): 
+			case ($k == $k_qclass): # QCLASS
+			case ($k == ($k_qclass + 1)): 
 				array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
 				var_dump(['QUESTION QCLASS:'. $k . " ", $aMessage['QUESTION']['QCLASS']]);
 			break;
