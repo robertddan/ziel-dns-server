@@ -14,9 +14,15 @@
 		$sField = str_pad($sField, 8, 0, STR_PAD_LEFT);
 		return $sField;
 	}, str_split($buf));
-	
+		
+	$aHexBuffer = array_map(function($sField) {
+		$sField = base_convert(ord($sField), 10, 16);
+		$sField = str_pad($sField, 2, 0, STR_PAD_LEFT);
+		return $sField;
+	}, str_split($buf));
+
 	#var_dump(array('$aBuffer', $aBuffer));
-	var_dump(implode(" ", $aBuffer));
+	var_dump(implode(" ", $aHexBuffer));
 	
 /*
                                     1  1  1  1  1  1
@@ -50,7 +56,7 @@
 	#$aQSDname = $aQDname = $aQTLDname = array();
 	#$sTxId = $sTxId45 = $sTxId67 = $sTxId89 = $sTxIdab = "";
 	
-	$iCount = 0;
+	$iDomainCount = $iDomainLength = 0;
 	$aMessage = array(
 		'HEADER' => array(
 			'ID' => array(),
@@ -96,8 +102,6 @@
 
 	foreach($aBuffer as $k => $sField)
 	{
-		$aaTx[$k] = base_convert($sField, 2, 10);
-
 		switch($k){
 			case 0: # tx id
 			case 1:
@@ -148,12 +152,16 @@
 			break;
 				
 				
-			case 12: # subdomain count
+				
+				
+			case ($k >= (12 + $iDomainCount) && $k <= (12 + $iDomainLength)): # domain count
+				var_dump(['domain count', $sField]);
+				die();
 				$sQSDcount = base_convert($sField, 2, 10);
 				$k_qscn = (int) $sQSDcount;
 				$k_qsc = $k + 1;
 				$k_qscf = $k_qsc + $k_qscn;
-				var_dump(implode(['subdomain count '.$k, " ", $k_qsc, " sQSDcount: ", $sQSDcount, " k_qsc ", $k_qsc]));
+				var_dump(implode(['subdomain count '.$k, " ", $k_qsc, " sQSDcount: ", $sQSDcount, " k_qsc ", $k_qsc, ' $sField: ', $sField]));
 			break;
 			case ($k >= $k_qsc && $k < $k_qscf): # subdomain name (www)
 				if ($k_qsc < $k_qscn) $k_qsc = $k_qsc + 1;
@@ -164,7 +172,7 @@
 				}
 var_dump('$ak_label', $ak_label);
 				array_push($aMessage['QUESTION']['QNAME'][$ak_label], chr(base_convert($sField, 2, 10)));
-				var_dump(['ak_label', $ak_label, 'QUESTION QNAME:', $aMessage['QUESTION']['QNAME']]);
+				var_dump(['ak_label', $ak_label, 'QUESTION QNAME:', $aMessage['QUESTION']['QNAME'], ' $sField: ', $sField]);
 			break;
 				
 			case ($k == $k_qsdc): # domain count
@@ -184,7 +192,7 @@ var_dump('$ak_label', $ak_label);
 var_dump('$ak_label', $ak_label);
 				if (!isset($aMessage['QUESTION']['QNAME'][$ak_label])) $aMessage['QUESTION']['QNAME'][$ak_label] = array();
 				array_push($aMessage['QUESTION']['QNAME'][$ak_label], chr(base_convert($sField, 2, 10)));
-				var_dump(['ak_label', $ak_label, 'QUESTION QNAME:', $aMessage['QUESTION']['QNAME']]);
+				var_dump(['ak_label', $ak_label, 'QUESTION QNAME:', $aMessage['QUESTION']['QNAME'], ' $sField: ', $sField]);
 			break;
 				
 			case ($k == $k_qdnc): # top-level domain count
@@ -192,7 +200,7 @@ var_dump('$ak_label', $ak_label);
 				$k_qtldcn = (int) $sQTLDcount;
 				$k_qtldc = $k + 1;
 				$k_qtldcf = $k_qtldc + $k_qtldcn;
-				var_dump(implode(['top-level domain count '.$k, " ", $k_qtldcn, " sQTLDcount ", $sQTLDcount]));
+				var_dump(implode(['top-level domain count '.$k, " ", $k_qtldcn, " sQTLDcount ", $sQTLDcount, ' $sField: ', $sField]));
 			break;
 			case ($k >= $k_qtldc && $k < $k_qtldcf): # top-level domain name (com)
 				if ($k_qtldc < $k_qtldcn) $k_qtldc = $k_qtldc + 1;
@@ -204,25 +212,27 @@ var_dump('$ak_label', $ak_label);
 var_dump('$ak_label', $ak_label);
 				if (!isset($aMessage['QUESTION']['QNAME'][$ak_label])) $aMessage['QUESTION']['QNAME'][$ak_label] = array();
 				array_push($aMessage['QUESTION']['QNAME'][$ak_label], chr(base_convert($sField, 2, 10)));
-				var_dump(['ak_label', $ak_label, 'QUESTION QNAME:', $aMessage['QUESTION']['QNAME']]);
+				var_dump(['ak_label', $ak_label, 'QUESTION QNAME:', $aMessage['QUESTION']['QNAME'], ' $sField: ', $sField]);
 			break;
 			case ($k == $k_qtldcf): # End domain
 				$k_qtype= $k_qtldcf + 1;
-				var_dump(['End domain:'. $k . " ", base_convert($sField, 2, 16)]);
+				var_dump(['End domain:'. $k . " ", base_convert($sField, 2, 16), ' $sField: ', $sField]);
 			break;
+				
+				
 				
 				
 			case ($k == $k_qtype):  # QTYPE
 			case ($k == ($k_qtype + 1)):
 				$k_qclass = $k_qtype + 2;
 				array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
-				var_dump(['QUESTION QTYPE:'. $k . " ", $aMessage['QUESTION']['QTYPE']]);
+				var_dump(['QUESTION QTYPE:'. $k . " ", $aMessage['QUESTION']['QTYPE'], ' $sField: ', $sField]);
 			break;
 				
 			case ($k == $k_qclass): # QCLASS
 			case ($k == ($k_qclass + 1)): 
 				array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
-				var_dump(['QUESTION QCLASS:'. $k . " ", $aMessage['QUESTION']['QCLASS']]);
+				var_dump(['QUESTION QCLASS:'. $k . " ", $aMessage['QUESTION']['QCLASS'], ' $sField: ', $sField]);
 			break;
 		}
 		
