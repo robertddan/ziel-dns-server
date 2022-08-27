@@ -98,10 +98,13 @@
 	 0 ,  1                             // QUESTION: QCLASS
 	 */
 		
-	$ikCount = $ikLength = $iCount = $ik_label = 0; 
-	#$ikLength = 1;
+	$ikCount = $ikLength = $iCount = 0;
+	$ik_label = -1;
 	foreach($aBuffer as $k => $sField)
 	{
+		
+		var_dump(implode(array($k.' $sField: ', $sField)));
+		
 		switch($k){
 			case 0: # tx id
 			case 1:
@@ -150,36 +153,38 @@
 				array_push($aMessage['HEADER']['ARCOUNT'], base_convert($sField, 2, 16));
 				var_dump(['a b ARCOUNT:', $aMessage['HEADER']['ARCOUNT']]);
 			break;
-
 				
 				
 			case ($k == (12 + $ikCount)): # domain length
 				$iCount = (int) base_convert($sField, 2, 10);
-				if ($iCount == 0) $ikLength = $ikCount = count($aBuffer) + 2;
+				if ($iCount == 0) $ikLength = $ikCount = count($aBuffer) + 1;
 				else $ikLength = $ikCount + 1;
+				$ik_label = $ik_label + 1;
+				var_dump(implode([
+					' $ik_label: ', $ik_label,
+					' $ikCount: ', $ikCount,
+					' $iCount: ', $iCount,
+					' $ikLength: ', $ikLength,
+				]));
 			break;
 			case ($k == (12 + $ikLength)): # domain count
 				$iCount = $iCount - 1;
 				$ikLength = $ikLength + 1;
 				if ($iCount == 0) $ikCount = $ikLength;
-
-				if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) {
-					$aMessage['QUESTION']['QNAME'][$ik_label] = array();
-				}
-				else {
-					array_push($aMessage['QUESTION']['QNAME'][$ik_label], chr(base_convert($sField, 2, 10)));
-				}
-
-				var_dump([$iCount, $iDomainCount, $iDomainLength]);
-				var_dump([
-					' ik_label: ', $ik_label, 
-					' QUESTION QNAME: ', $aMessage['QUESTION']['QNAME'], 
-					' $sField: ', $sField,
-					' $iCount: ', $iCount,
-					' $iDomainLength: ', $iDomainLength,
+				
+				if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) $aMessage['QUESTION']['QNAME'][$ik_label] = array();
+				array_push($aMessage['QUESTION']['QNAME'][$ik_label], chr(base_convert($sField, 2, 10)));
+				
+				var_dump([implode([
+						' $ik_label: ', $ik_label,
+						' $ikCount: ', $ikCount,
+						' $iCount: ', $iCount,
+						' $ikLength: ', $ikLength,
+					]),
+					'QUESTION QNAME: ', $aMessage['QUESTION']['QNAME']
 				]);
 			break;
-		}
+		
 				
 				
 				
@@ -269,7 +274,6 @@ var_dump('$ak_label', $ak_label);
 			
 		}
 		
-		var_dump(implode(array($k.' $sField: ', $sField)));
 	}
 	#var_dump(array('$aBuffer', $aBuffer));
 	var_dump(implode(" ", $aBuffer));
