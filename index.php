@@ -22,40 +22,8 @@
 	}, str_split($buf));
 
 	#var_dump(array('$aBuffer', $aBuffer));
-	var_dump(implode(" ", $aHexBuffer));
-	
-/*
-                                    1  1  1  1  1  1
-      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                      ID                       |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                    QDCOUNT                    |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                    ANCOUNT                    |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                    NSCOUNT                    |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                    ARCOUNT                    |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-                                    1  1  1  1  1  1
-      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                                               |
-    /                     QNAME                     /
-    /                                               /
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                     QTYPE                     |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                     QCLASS                    |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-*/
+	#var_dump(implode(" ", $aHexBuffer));
 
-	#$aQSDname = $aQDname = $aQTLDname = array();
-	#$sTxId = $sTxId45 = $sTxId67 = $sTxId89 = $sTxIdab = "";
-	
 	$aMessage = array(
 		'HEADER' => array(
 			'ID' => array(),
@@ -80,31 +48,27 @@
 			'QCLASS' => array(),
 		)
 	);
-	
-	/*
-	 0 ,  42,                           // HEADER: ID
-	 0 ,  0 ,                           // HEADER: Various flags
-	 0 ,  1 ,                           // HEADER: QDCOUNT
-	 0 ,  0 ,                           // HEADER: ANCOUNT
-	 0 ,  0 ,                           // HEADER: NSCOUNT
-	 0 ,  0 ,                           // HEADER: ARCOUNT
 
-	 3 , 'w', 'w', 'w',                 // QUESTION: QNAME: label 1
-	 6 , 'g', 'o', 'o', 'g', 'l', 'e',  // QUESTION: QNAME: label 2
-	 3 , 'c', 'o', 'm',                 // QUESTION: QNAME: label 3
-	 
-	 0 ,                                // QUESTION: QNAME: null label
-	 0 ,  1 ,                           // QUESTION: QTYPE
-	 0 ,  1                             // QUESTION: QCLASS
-	 */
-		
-	$ikCount = $ikLength = $iCount = 0;
-	$ik_label = -1;
+/*
+                                    1  1  1  1  1  1
+      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                      ID                       |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                    QDCOUNT                    |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                    ANCOUNT                    |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                    NSCOUNT                    |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                    ARCOUNT                    |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+*/
 	foreach($aBuffer as $k => $sField)
 	{
-		
 		var_dump(implode(array($k.' $sField: ', $sField)));
-		
 		switch($k){
 			case 0: # tx id
 			case 1:
@@ -153,8 +117,30 @@
 				array_push($aMessage['HEADER']['ARCOUNT'], base_convert($sField, 2, 16));
 				var_dump(['a b ARCOUNT:', $aMessage['HEADER']['ARCOUNT']]);
 			break;
-				
-				
+		}
+	}
+
+/*
+                                    1  1  1  1  1  1
+      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                                               |
+    /                     QNAME                     /
+    /                                               /
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                     QTYPE                     |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                     QCLASS                    |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+*/
+	$ikCount = $ikLength = $iCount = 0;
+	$ik_label = -1;
+	foreach($aBuffer as $k => $sField)
+	{
+		
+		var_dump(implode(array($k.' $sField: ', $sField)));
+		
+		switch($k){
 			case ($k == (12 + $ikCount)): # domain length
 				$iCount = (int) base_convert($sField, 2, 10);
 				if ($iCount == 0) $ikLength = $ikCount = count($aBuffer) + 1;
@@ -184,96 +170,7 @@
 					'QUESTION QNAME: ', $aMessage['QUESTION']['QNAME']
 				]);
 			break;
-		
-				
-				
-				
-				
-/*
-			case ($k >= (12 + $iDomainCount) && $k <= (12 + $iDomainLength)): # domain count
-				$sQSDcount = base_convert($sField, 2, 10);
-				$k_qscn = (int) $sQSDcount;
-				$k_qsc = $k + 1;
-				$k_qscf = $k_qsc + $k_qscn;
-				var_dump(implode(['subdomain count '.$k, " ", $k_qsc, " sQSDcount: ", $sQSDcount, " k_qsc ", $k_qsc, ' $sField: ', $sField]));
-			break;
-			
-			case ($k >= $k_qsc && $k < $k_qscf): # subdomain name (www)
-				if ($k_qsc < $k_qscn) $k_qsc = $k_qsc + 1;
-				$k_qsdc = $k + 1;
-				$ak_label = 'subdomain'; #count($aMessage['QUESTION']['QNAME']);
-				if (!isset($aMessage['QUESTION']['QNAME'][$ak_label])) {
-					$aMessage['QUESTION']['QNAME'][$ak_label] = array();
-				}
-var_dump('$ak_label', $ak_label);
-				array_push($aMessage['QUESTION']['QNAME'][$ak_label], chr(base_convert($sField, 2, 10)));
-				var_dump(['ak_label', $ak_label, 'QUESTION QNAME:', $aMessage['QUESTION']['QNAME'], ' $sField: ', $sField]);
-			break;
-
-				
-			case ($k == $k_qsdc): # domain count
-				$sQDcount = base_convert($sField, 2, 10);
-				$k_qdcn = (int) $sQDcount;
-				$k_qdc = $k + 1;
-				$k_qdcf = $k_qdc + $k_qdcn;
-				var_dump(implode(['domain count '.$k, " ", $k_qdcn, " sQDcount ", $sQDcount]));
-			break;
-			case ($k >= $k_qdc && $k < $k_qdcf): # domain name (suiteziel)
-				if ($k_qsc < $k_qscn) $k_qsc = $k_qsc + 1;
-				$k_qdnc = $k + 1;
-				$ak_label = 'domain'; #count($aMessage['QUESTION']['QNAME']);
-				if (!isset($aMessage['QUESTION']['QNAME'][$ak_label])) {
-					$aMessage['QUESTION']['QNAME'][$ak_label] = array();
-				}
-var_dump('$ak_label', $ak_label);
-				if (!isset($aMessage['QUESTION']['QNAME'][$ak_label])) $aMessage['QUESTION']['QNAME'][$ak_label] = array();
-				array_push($aMessage['QUESTION']['QNAME'][$ak_label], chr(base_convert($sField, 2, 10)));
-				var_dump(['ak_label', $ak_label, 'QUESTION QNAME:', $aMessage['QUESTION']['QNAME'], ' $sField: ', $sField]);
-			break;
-				
-			case ($k == $k_qdnc): # top-level domain count
-				$sQTLDcount = base_convert($sField, 2, 10);
-				$k_qtldcn = (int) $sQTLDcount;
-				$k_qtldc = $k + 1;
-				$k_qtldcf = $k_qtldc + $k_qtldcn;
-				var_dump(implode(['top-level domain count '.$k, " ", $k_qtldcn, " sQTLDcount ", $sQTLDcount, ' $sField: ', $sField]));
-			break;
-			case ($k >= $k_qtldc && $k < $k_qtldcf): # top-level domain name (com)
-				if ($k_qtldc < $k_qtldcn) $k_qtldc = $k_qtldc + 1;
-				$k_qtldnc = $k + 1;
-				$ak_label = 'tld'; #count($aMessage['QUESTION']['QNAME']);
-				if (!isset($aMessage['QUESTION']['QNAME'][$ak_label])) {
-					$aMessage['QUESTION']['QNAME'][$ak_label] = array();
-				}
-var_dump('$ak_label', $ak_label);
-				if (!isset($aMessage['QUESTION']['QNAME'][$ak_label])) $aMessage['QUESTION']['QNAME'][$ak_label] = array();
-				array_push($aMessage['QUESTION']['QNAME'][$ak_label], chr(base_convert($sField, 2, 10)));
-				var_dump(['ak_label', $ak_label, 'QUESTION QNAME:', $aMessage['QUESTION']['QNAME'], ' $sField: ', $sField]);
-			break;
-			case ($k == $k_qtldcf): # End domain
-				$k_qtype= $k_qtldcf + 1;
-				var_dump(['End domain:'. $k . " ", base_convert($sField, 2, 16), ' $sField: ', $sField]);
-			break;
-
-				
-				
-			case ($k == $k_qtype):  # QTYPE
-			case ($k == ($k_qtype + 1)):
-				$k_qclass = $k_qtype + 2;
-				array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
-				var_dump(['QUESTION QTYPE:'. $k . " ", $aMessage['QUESTION']['QTYPE'], ' $sField: ', $sField]);
-			break;
-				
-			case ($k == $k_qclass): # QCLASS
-			case ($k == ($k_qclass + 1)): 
-				array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
-				var_dump(['QUESTION QCLASS:'. $k . " ", $aMessage['QUESTION']['QCLASS'], ' $sField: ', $sField]);
-			break;
-	*/
-			
-			
 		}
-		
 	}
 	#var_dump(array('$aBuffer', $aBuffer));
 	var_dump(implode(" ", $aBuffer));
