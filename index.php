@@ -21,9 +21,6 @@ $aHexBuffer = array_map(function($sField) {
 	return $sField;
 }, str_split($buf));
 
-#var_dump(array('$aBuffer', $aBuffer));
-#var_dump(implode(" ", $aHexBuffer));
-
 $aMessage = array(
 	'HEADER' => array(
 		'ID' => array(),
@@ -145,12 +142,10 @@ foreach($aBuffer as $k => $sField)
 		case ($k == (12 + $k_qtype + 1)):
 			$k_qclass = $k_qtype + 2;
 			array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
-			var_dump(array('QTYPE', $k, $k_qtype, $k_qclass));
 		break;
 		case ($k == (12 + $k_qclass)): # QCLASS
 		case ($k == (12 + $k_qclass + 1)): 
 			array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
-			var_dump(array('QCLASS', $k, $k_qtype, $k_qclass));
 		break;
 		case ($k > (12 + $k_qclass + 1)): 
 			var_dump(array('Q', $k, base_convert($sField, 2, 16)));
