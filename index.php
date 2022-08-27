@@ -56,7 +56,6 @@
 	#$aQSDname = $aQDname = $aQTLDname = array();
 	#$sTxId = $sTxId45 = $sTxId67 = $sTxId89 = $sTxIdab = "";
 	
-	$iDomainCount = $iDomainLength = $ik_label = $iCount = $iDcount = 0;
 	$aMessage = array(
 		'HEADER' => array(
 			'ID' => array(),
@@ -99,7 +98,8 @@
 	 0 ,  1                             // QUESTION: QCLASS
 	 */
 		
-
+	$ikCount = $ikLength = $iCount = $ik_label = 0; 
+	#$ikLength = 1;
 	foreach($aBuffer as $k => $sField)
 	{
 		switch($k){
@@ -150,56 +150,26 @@
 				array_push($aMessage['HEADER']['ARCOUNT'], base_convert($sField, 2, 16));
 				var_dump(['a b ARCOUNT:', $aMessage['HEADER']['ARCOUNT']]);
 			break;
-		}
-				
-				
-		foreach($aBuffer as $k => $sField)
-		{
-			case ($k == (12 + $iDomainLength)): # domain count
-				if ($iCount == 0) $iCount = base_convert($sField, 2, 10);
-				$iDomainLength = $iDomainLength + $iCount;
-				
-				
-				if ($iCount > $iDomainLength) $iDomainLength = $iDomainLength + 1;
-				
-				if ($iCount == $iDomainLength) $iDomainLength = $iDomainLength + $iCount;
-				
-				if ($iCount == 0) die();
-				#$ak_label = 'subdomain'; #count($aMessage['QUESTION']['QNAME']);
-			
-				if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) {
-					$aMessage['QUESTION']['QNAME'][$ik_label] = array();
-				}
-				else {
-					array_push($aMessage['QUESTION']['QNAME'][$ik_label], chr(base_convert($sField, 2, 10)));
-				}
-				
-				var_dump([$iCount, $iDomainCount, $iDomainLength]);
-				var_dump([
-					' ik_label: ', $ik_label, 
-					' QUESTION QNAME: ', $aMessage['QUESTION']['QNAME'], 
-					' $sField: ', $sField,
-					' $iCount: ', $iCount,
-					' $iDomainLength: ', $iDomainLength,
-				]);
-			break;
-			case ($k == (12 + $iDomainLength)): # domain count
-				if ($iCount == 0) $iCount = base_convert($sField, 2, 10);
 
-				if ($iCount > $iDomainLength) $iDomainLength = $iDomainLength + 1;
 				
-				if ($iCount == $iDomainLength) $iDomainLength = $iDomainLength + $iCount;
 				
-				if ($iCount == 0) die();
-				#$ak_label = 'subdomain'; #count($aMessage['QUESTION']['QNAME']);
-			
+			case ($k == (12 + $ikCount)): # domain length
+				$iCount = (int) base_convert($sField, 2, 10);
+				if ($iCount == 0) $ikLength = $ikCount = count($aBuffer) + 2;
+				else $ikLength = $ikCount + 1;
+			break;
+			case ($k == (12 + $ikLength)): # domain count
+				$iCount = $iCount - 1;
+				$ikLength = $ikLength + 1;
+				if ($iCount == 0) $ikCount = $ikLength;
+
 				if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) {
 					$aMessage['QUESTION']['QNAME'][$ik_label] = array();
 				}
 				else {
 					array_push($aMessage['QUESTION']['QNAME'][$ik_label], chr(base_convert($sField, 2, 10)));
 				}
-				
+
 				var_dump([$iCount, $iDomainCount, $iDomainLength]);
 				var_dump([
 					' ik_label: ', $ik_label, 
@@ -209,7 +179,7 @@
 					' $iDomainLength: ', $iDomainLength,
 				]);
 			break;
-			
+		}
 				
 				
 				
