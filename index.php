@@ -123,14 +123,14 @@ foreach($aBuffer as $k => $sField)
 	|                     QCLASS                    |
 	+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 */
-$ikCount = $ikLength = $iCount = 0;
+$ikCount = $ikLength = $iCount = $k_qtype = $k_qclass = 0;
 $ik_label = -1;
 foreach($aBuffer as $k => $sField)
 {
 	switch($k){
 		case ($k == (12 + $ikCount)): # domain length
 			$iCount = (int) base_convert($sField, 2, 10);
-			if ($iCount == 0) $ikLength = $ikCount = count($aBuffer) + 1;
+			if ($iCount == 0) $k_qtype = $ikCount + 1;
 			else $ikLength = $ikCount + 1;
 			$ik_label = $ik_label + 1;
 		break;
@@ -140,6 +140,20 @@ foreach($aBuffer as $k => $sField)
 			if ($iCount == 0) $ikCount = $ikLength;
 			if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) $aMessage['QUESTION']['QNAME'][$ik_label] = array();
 			array_push($aMessage['QUESTION']['QNAME'][$ik_label], chr(base_convert($sField, 2, 10)));
+		break;
+		case ($k == (12 + $k_qtype)):  # QTYPE
+		case ($k == (12 + $k_qtype + 1)):
+			$k_qclass = $k_qtype + 2;
+			array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
+			var_dump(array('QTYPE', $k, $k_qtype, $k_qclass));
+		break;
+		case ($k == (12 + $k_qclass)): # QCLASS
+		case ($k == (12 + $k_qclass + 1)): 
+			array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
+			var_dump(array('QCLASS', $k, $k_qtype, $k_qclass));
+		break;
+		case ($k > (12 + $k_qclass + 1)): 
+			var_dump(array('Q', $k, base_convert($sField, 2, 16)));
 		break;
 	}
 }
