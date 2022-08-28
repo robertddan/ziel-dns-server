@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
 if($socket === false) print_r(socket_strerror(socket_last_error())).PHP_EOL;
 if(!socket_bind($socket, "0.0.0.0", 53)) { 
@@ -142,13 +145,16 @@ foreach($aBuffer as $k => $sField)
 		case ($k == (12 + $k_qtype + 1)):
 			$k_qclass = $k_qtype + 2;
 			array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
+			var_dump(array('QTYPE', $k, $sField));
 		break;
 		case ($k == (12 + $k_qclass)): # QCLASS
 		case ($k == (12 + $k_qclass + 1)): 
 			array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
+			var_dump(array('QCLASS', $k, $sField));
 		break;
 		case ($k > (12 + $k_qclass + 1)): 
-			var_dump(array('Q', $k, base_convert($sField, 2, 16)));
+			var_dump(array('Q', $k, base_convert($sField, 2, 10)));
+			var_dump(array('Q', $k, chr(base_convert($sField, 2, 10))));
 		break;
 	}
 }
@@ -156,7 +162,9 @@ foreach($aBuffer as $k => $sField)
 
 
 #var_dump(array('$aBuffer', $aBuffer));
-#var_dump(implode(" ", $aBuffer));
+var_dump(implode(" ", $aBuffer));
+var_dump(implode(" ", $aHexBuffer));
+var_dump(implode(" ", array_map("hexdec", $aHexBuffer)));
 
 var_dump($aMessage);
 	
@@ -169,6 +177,7 @@ string(220) "228::210::1::32::0::1::0::0::0::0::0::1::3::119::119::119::9::115::
 0 00101001 00010000 00000000 00000000 00000000 00000000 00000000 00000000 00001100 00000000 00001010 00000000 00001000 01010100 00100110 00000110 11011010 10111111 00010000
  00011001 01110010
  
+ed 4f 01 20 00 01 00 00 00 00 00 01 06 69 6d 61 67 65 73 06 67 6f 6f 67 6c 65 03 63 6f 6d 00 00 01 00 01 00 00 29 10 00 00 00 00 00 00 0c 00 0a 00 08 8f f1 b1 2c be 8f 02 6b
 */
 	
 
