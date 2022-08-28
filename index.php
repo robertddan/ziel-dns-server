@@ -13,12 +13,12 @@ if (!socket_bind($rSocket, "0.0.0.0", 53)) {
 }
 socket_recvfrom($rSocket, $buf, 65535, 0, $clientIP, $clientPort);
 
-$stz = bin2hex($buf);
-var_dump($stz);
-die();
+#$stz = bin2hex($buf);
+#var_dump($stz);
+#die();
 
-socket_connect($rSocket, '8.8.8.8', 53);
-socket_send($rSocket, $sMessage, strlen($msg), 0);
+#socket_connect($rSocket, '8.8.8.8', 53);
+#socket_send($rSocket, $sMessage, strlen($msg), 0);
 
 
 
@@ -188,6 +188,7 @@ var_dump(implode(" ", $aBuffer));
 var_dump(implode(" ", $aHexBuffer));
 var_dump(implode(" ", array_map("hexdec", $aHexBuffer)));
 
+var_dump(implode(" ", array_map("hexdec", $aMessage)));
 var_dump($aMessage);
 
 /*
@@ -200,6 +201,8 @@ string(220) "228::210::1::32::0::1::0::0::0::0::0::1::3::119::119::119::9::115::
  00011001 01110010
  
 ed 4f 01 20 00 01 00 00 00 00 00 01 06 69 6d 61 67 65 73 06 67 6f 6f 67 6c 65 03 63 6f 6d 00 00 01 00 01 00 00 29 10 00 00 00 00 00 00 0c 00 0a 00 08 8f f1 b1 2c be 8f 02 6b
+
+ed4f0120000100000000000106696d6167657306676f6f676c6503636f6d0000010001000029100000000000000c000a00088ff1b12cbe8f026b
 */
 	
 
