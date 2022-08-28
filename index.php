@@ -1,16 +1,38 @@
 <?php
 
+$rSocket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+
+$sMessage = "ed 4f 01 20 00 01 00 00 00 00 00 01 06 69 6d 61 67 65 73 06 67 6f 6f 67 6c 65 03 63 6f 6d 00 00 01 00 01";
 
 
 
-$socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-if($socket === false) print_r(socket_strerror(socket_last_error())).PHP_EOL;
-if(!socket_bind($socket, "0.0.0.0", 53)) { 
-	socket_close($socket);
+if ($rSocket === false) print_r(socket_strerror(socket_last_error())).PHP_EOL;
+if (!socket_bind($rSocket, "0.0.0.0", 53)) { 
+	socket_close($rSocket);
 	print_r(socket_strerror(socket_last_error())).PHP_EOL;
 }
-socket_recvfrom($socket, $buf, 65535, 0, $clientIP, $clientPort);
+socket_recvfrom($rSocket, $buf, 65535, 0, $clientIP, $clientPort);
 
+$stz = bin2hex($buf);
+var_dump($stz);
+die();
+
+socket_connect($rSocket, '8.8.8.8', 53);
+socket_send($rSocket, $sMessage, strlen($msg), 0);
+
+
+
+
+
+/*
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+try:
+	sock.sendto(binascii.unhexlify(message), server_address)
+	data, _ = sock.recvfrom(4096)
+finally:
+	sock.close()
+return binascii.hexlify(data).decode("utf-8")
+*/
 
 $aBuffer = array_map(function($sField) {
 	$sField = base_convert(ord($sField), 10, 2);
@@ -167,7 +189,7 @@ var_dump(implode(" ", $aHexBuffer));
 var_dump(implode(" ", array_map("hexdec", $aHexBuffer)));
 
 var_dump($aMessage);
-	
+
 /*
 string(220) "228::210::1::32::0::1::0::0::0::0::0::1::3::119::119::119::9::115::117::105::116::101::122::105::101::108::3::99::111::109::0::0::1::0::1::0::0::41::16::0::0::
 0::0::0::0::12::0::10::0::8::84::38::6::218::191::16::25::114"
