@@ -60,7 +60,7 @@ $aMessage = array(
 		'QNAME' => array(),
 		'QTYPE' => array(),
 		'QCLASS' => array(),
-	), #NAME TYPE CLASS TTL RDLENGTH RDATA
+	),
 	'ANSWER' => array(
 		'NAME' => array(),
 		'TYPE' => array(),
@@ -173,10 +173,6 @@ foreach($aBuffer as $k => $sField)
 			var_dump(array('QCLASS', $k, $sField));
 			$k_answer = $k_qclass + 1;
 		break;
-		case ($k > (12 + $k_qclass + 1)): 
-			var_dump(array('Q', $k, base_convert($sField, 2, 10)));
-			var_dump(array('Q', $k, chr(base_convert($sField, 2, 10))));
-		break;
 	}
 }
 
@@ -207,40 +203,35 @@ foreach($aBuffer as $k => $sField)
 foreach($aBuffer as $k => $sField)
 {
 	switch($k){
-		case ($k > (12 + $k_answer + 1)): 
-		case ($k > (12 + $k_qclass + 2)): 
+		case ($k == (12 + $k_answer + 1)): # NAME
+		case ($k == (12 + $k_qclass + 2)):
 			array_push($aMessage['ANSWER']['NAME'], base_convert($sField, 2, 16));
-			var_dump(array('Q', $k, base_convert($sField, 2, 10)));
+			var_dump(array('NAME', $k, $sField, base_convert($sField, 2, 10)));
 		break;
-		case ($k > (12 + $k_qclass + 3)): 
-		case ($k > (12 + $k_qclass + 4)): 
-			
+		case ($k == (12 + $k_qclass + 3)): # TYPE
+		case ($k == (12 + $k_qclass + 4)):
 			array_push($aMessage['ANSWER']['TYPE'], base_convert($sField, 2, 16));
-			var_dump(array('Q', $k, base_convert($sField, 2, 10)));
+			var_dump(array('TYPE', $k, $sField, base_convert($sField, 2, 10)));
 		break;
-		case ($k > (12 + $k_qclass + 5)): 
-		case ($k > (12 + $k_qclass + 6)): 
-			
+		case ($k == (12 + $k_qclass + 5)): # CLASS
+		case ($k == (12 + $k_qclass + 6)):
 			array_push($aMessage['ANSWER']['CLASS'], base_convert($sField, 2, 16));
-			var_dump(array('Q', $k, base_convert($sField, 2, 10)));
+			var_dump(array('CLASS', $k, $sField, base_convert($sField, 2, 10)));
 		break;
-		case ($k > (12 + $k_qclass + 7)): 
-		case ($k > (12 + $k_qclass + 8)): 
-			
+		case ($k == (12 + $k_qclass + 7)): # TTL
+		case ($k == (12 + $k_qclass + 8)):
 			array_push($aMessage['ANSWER']['TTL'], base_convert($sField, 2, 16));
-			var_dump(array('Q', $k, base_convert($sField, 2, 10)));
+			var_dump(array('TTL', $k, $sField, base_convert($sField, 2, 10)));
 		break;
-		case ($k > (12 + $k_qclass + 9)): 
-		case ($k > (12 + $k_qclass + 10)): 
-			
+		case ($k == (12 + $k_qclass + 9)): # RDLENGTH
+		case ($k == (12 + $k_qclass + 10)):
 			array_push($aMessage['ANSWER']['RDLENGTH'], base_convert($sField, 2, 16));
-			var_dump(array('Q', $k, base_convert($sField, 2, 10)));
+			var_dump(array('RDLENGTH', $k, $sField, base_convert($sField, 2, 10)));
 		break;
-		case ($k > (12 + $k_qclass + 11)): 
-		case ($k > (12 + $k_qclass + 12)): 
-			
+		case ($k == (12 + $k_qclass + 11)): # RDATA
+		case ($k == (12 + $k_qclass + 12)):
 			array_push($aMessage['ANSWER']['RDATA'], base_convert($sField, 2, 16));
-			var_dump(array('Q', $k, base_convert($sField, 2, 10)));
+			var_dump(array('RDATA', $k, $sField, base_convert($sField, 2, 10)));
 		break;
 	}
 }
@@ -259,10 +250,9 @@ var_dump($aMessage);
 string(220) "228::210::1::32::0::1::0::0::0::0::0::1::3::119::119::119::9::115::117::105::116::101::122::105::101::108::3::99::111::109::0::0::1::0::1::0::0::41::16::0::0::
 0::0::0::0::12::0::10::0::8::84::38::6::218::191::16::25::114"
 
-11100100 11010010 00000001 00100000 00000000 00000001 00000000 00000000 00000000 00000000 00000000 00000001 00000011 01110111 01110111 01110111 00001001 011100
-11 01110101 01101001 01110100 01100101 01111010 01101001 01100101 01101100 00000011 01100011 01101111 01101101 00000000 00000000 00000001 00000000 00000001 00000000 0000000
-0 00101001 00010000 00000000 00000000 00000000 00000000 00000000 00000000 00001100 00000000 00001010 00000000 00001000 01010100 00100110 00000110 11011010 10111111 00010000
- 00011001 01110010
+10100001 00000010 00000001 00100000 00000000 00000001 00000000 00000000 00000000 00000000 00000000 00000001 00000011 01110111 01110111 01110111 00001001 01110011 01110101 01101001 
+01110100 01100101 01111010 01101001 01100101 01101100 00000011 01100011 01101111 01101101 00000000 00000000 00000001 00000000 00000001 00000000 00000000 00101001 00010000 00000000 
+00000000 00000000 00000000 00000000 00000000 00001100 00000000 00001010 00000000 00001000 11101001 00001101 11001101 10101101 00010011 10011110 01100011 01011100"
  
 ed 4f 01 20 00 01 00 00 00 00 00 01 06 69 6d 61 67 65 73 06 67 6f 6f 67 6c 65 03 63 6f 6d 00 00 01 00 01 00 00 29 10 00 00 00 00 00 00 0c 00 0a 00 08 8f f1 b1 2c be 8f 02 6b
 
