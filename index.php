@@ -2,10 +2,6 @@
 
 $rSocket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
 
-$sMessage = "ed 4f 01 20 00 01 00 00 00 00 00 01 06 69 6d 61 67 65 73 06 67 6f 6f 67 6c 65 03 63 6f 6d 00 00 01 00 01";
-
-
-
 if ($rSocket === false) print_r(socket_strerror(socket_last_error())).PHP_EOL;
 if (!socket_bind($rSocket, "0.0.0.0", 53)) { 
 	socket_close($rSocket);
@@ -21,18 +17,9 @@ socket_recvfrom($rSocket, $buf, 65535, 0, $clientIP, $clientPort);
 #socket_send($rSocket, $sMessage, strlen($msg), 0);
 
 
+#$sMessage = "ed 4f 01 20 00 01 00 00 00 00 00 01 06 69 6d 61 67 65 73 06 67 6f 6f 67 6c 65 03 63 6f 6d 00 00 01 00 01";
+$sMessage = "ed4f0120000100000000000106696d6167657306676f6f676c6503636f6d0000010001000029100000000000000c000a00088ff1b12cbe8f026b";
 
-
-
-/*
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-try:
-	sock.sendto(binascii.unhexlify(message), server_address)
-	data, _ = sock.recvfrom(4096)
-finally:
-	sock.close()
-return binascii.hexlify(data).decode("utf-8")
-*/
 
 $aBuffer = array_map(function($sField) {
 	$sField = base_convert(ord($sField), 10, 2);
@@ -45,6 +32,13 @@ $aHexBuffer = array_map(function($sField) {
 	$sField = str_pad($sField, 2, 0, STR_PAD_LEFT);
 	return $sField;
 }, str_split($buf));
+
+$aHexString = array_map(function($sField) {
+	$sField = base_convert($sField, 16, 2);
+	$sField = str_pad($sField, 2, 0, STR_PAD_LEFT);
+	return $sField;
+}, str_split($sMessage));
+
 
 $aMessage = array(
 	'HEADER' => array(
@@ -188,7 +182,7 @@ var_dump(implode(" ", $aBuffer));
 var_dump(implode(" ", $aHexBuffer));
 var_dump(implode(" ", array_map("hexdec", $aHexBuffer)));
 
-var_dump(implode(" ", array_map("hexdec", $aMessage)));
+#var_dump(implode(" ", array_map("hexdec", $aMessage)));
 var_dump($aMessage);
 
 /*
