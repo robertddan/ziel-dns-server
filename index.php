@@ -164,44 +164,39 @@ $ik_label = -1;
 $aQuestion = array();
 foreach($aBuffer as $k => $sField)
 {
-	
-var_dump([$k, bccomp($k, bcadd(12, $ikCount, 0), 0), (bccomp($k, 12, 0) == 0)]);
-	
-	switch($k){
-		case ((bccomp($k, 12, 0) == 0)): # domain length
-			
-var_dump([$k, bccomp($k, 12, 0), (bccomp($k, 12, 0) == 0)]);
-			
-			$iCount = (int) base_convert($sField, 2, 10);
-			if ($iCount == 0) $k_qtype = $ikCount + 1;
-			else $ikLength = $ikCount + 1;
-			$ik_label = $ik_label + 1;
-			array_push($aQuestion, $sField);
-			var_dump(implode(" ", [$k, '$aQuestion 1', $sField]));
-		break;
-		case ((bccomp($k, bcadd(12, $ikLength, 0), 0) == 0)): # QNAME
-			$iCount = $iCount - 1;
-			$ikLength = $ikLength + 1;
-			if ($iCount == 0) $ikCount = $ikLength;
-			if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) $aMessage['QUESTION']['QNAME'][$ik_label] = array();
-			array_push($aMessage['QUESTION']['QNAME'][$ik_label], chr(base_convert($sField, 2, 10)));
-			array_push($aQuestion, $sField);
-			var_dump(implode(" ", [$k, '$aQuestion 2', $sField]));
-		break;
-		case ((bccomp($k, bcadd(12, $k_qtype, 0), 0) == 0)):  # QTYPE
-		case ((bccomp($k, bcadd(12, bcadd(1, $k_qtype, 0), 0), 0) == 0)):
-			$k_qclass = $k_qtype + 2;
-			array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
-			array_push($aQuestion, $sField);
-			var_dump(implode(" ", [$k, '$aQuestion 3', $sField]));
-		break;
-		case (0 == bccomp($k, bcadd(12, $k_qclass, 0), 0)): # QCLASS
-		case (0 == bccomp($k, bcadd(12, bcadd(1, $k_qclass, 0), 0), 0)): 
-			array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
-			$k_answer = $k_qclass + 1;
-			array_push($aQuestion, $sField);
-			var_dump(implode(" ", [$k, '$aQuestion 4', $sField]));
-		break;
+	if (bccomp($k, 12, 0) == 0) { # domain length
+		$iCount = (int) base_convert($sField, 2, 10);
+		if ($iCount == 0) $k_qtype = $ikCount + 1;
+		else $ikLength = $ikCount + 1;
+		$ik_label = $ik_label + 1;
+		array_push($aQuestion, $sField);
+		var_dump(implode(" ", [$k, '$aQuestion 1', $sField]));
+	}
+
+	if (bccomp($k, bcadd(12, $ikLength, 0), 0) == 0) { # QNAME	
+		$iCount = $iCount - 1;
+		$ikLength = $ikLength + 1;
+		if ($iCount == 0) $ikCount = $ikLength;
+		if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) $aMessage['QUESTION']['QNAME'][$ik_label] = array();
+		array_push($aMessage['QUESTION']['QNAME'][$ik_label], chr(base_convert($sField, 2, 10)));
+		array_push($aQuestion, $sField);
+		var_dump(implode(" ", [$k, '$aQuestion 2', $sField]));
+	}
+
+	if ((bccomp($k, bcadd(12, $k_qtype, 0), 0) == 0)  # QTYPE
+		or (bccomp($k, bcadd(12, bcadd(1, $k_qtype, 0), 0), 0) == 0)) {
+		$k_qclass = $k_qtype + 2;
+		array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
+		array_push($aQuestion, $sField);
+		var_dump(implode(" ", [$k, '$aQuestion 3', $sField]));
+	}
+
+	if ((bccomp($k, bcadd(12, $k_qclass, 0), 0) == 0)  # QCLASS
+		or (bccomp($k, bcadd(12, bcadd(1, $k_qclass, 0), 0), 0) == 0)) {
+		array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
+		$k_answer = $k_qclass + 1;
+		array_push($aQuestion, $sField);
+		var_dump(implode(" ", [$k, '$aQuestion 4', $sField]));
 	}
 }
 
@@ -231,44 +226,44 @@ var_dump([$k, bccomp($k, 12, 0), (bccomp($k, 12, 0) == 0)]);
 $aAnswer = array();
 foreach($aBuffer as $k => $sField)
 {
-	switch($k){
-		case ($k == (12 + $k_answer + 1)): # NAME
-		case ($k == (12 + $k_qclass + 2)):
-			array_push($aMessage['ANSWER']['NAME'], base_convert($sField, 2, 16));
-			array_push($aAnswer, $sField);
-			var_dump(implode(" ", [$k, '$aAnswer', $sField]));
-		break;
-		case ($k == (12 + $k_qclass + 3)): # TYPE
-		case ($k == (12 + $k_qclass + 4)):
-			array_push($aMessage['ANSWER']['TYPE'], base_convert($sField, 2, 16));
-			array_push($aAnswer, $sField);
-			var_dump(implode(" ", [$k, '$aAnswer', $sField]));
-		break;
-		case ($k == (12 + $k_qclass + 5)): # CLASS
-		case ($k == (12 + $k_qclass + 6)):
-			array_push($aMessage['ANSWER']['CLASS'], base_convert($sField, 2, 16));
-			array_push($aAnswer, $sField);
-			var_dump(implode(" ", [$k, '$aAnswer', $sField]));
-		break;
-		case ($k == (12 + $k_qclass + 7)): # TTL
-		case ($k == (12 + $k_qclass + 8)):
-			array_push($aMessage['ANSWER']['TTL'], base_convert($sField, 2, 16));
-			array_push($aAnswer, $sField);
-			var_dump(implode(" ", [$k, '$aAnswer', $sField]));
-		break;
-		case ($k == (12 + $k_qclass + 9)): # RDLENGTH
-		case ($k == (12 + $k_qclass + 10)):
-			array_push($aMessage['ANSWER']['RDLENGTH'], base_convert($sField, 2, 16));
-			array_push($aAnswer, $sField);
-			var_dump(implode(" ", [$k, '$aAnswer', $sField]));
-		break;
-		case ($k == (12 + $k_qclass + 11)): # RDATA
-		case ($k == (12 + $k_qclass + 12)):
-			array_push($aMessage['ANSWER']['RDATA'], base_convert($sField, 2, 16));
-			array_push($aAnswer, $sField);
-			var_dump(implode(" ", [$k, '$aAnswer', $sField]));
-		break;
+
+	if (($k == (12 + $k_answer + 1)) # NAME
+		or ($k == (12 + $k_qclass + 2))){
+		array_push($aMessage['ANSWER']['NAME'], base_convert($sField, 2, 16));
+		array_push($aAnswer, $sField);
+		var_dump(implode(" ", [$k, '$aAnswer', $sField]));
 	}
+	if (($k == (12 + $k_qclass + 3)) # TYPE
+		or ($k == (12 + $k_qclass + 4))){
+		array_push($aMessage['ANSWER']['TYPE'], base_convert($sField, 2, 16));
+		array_push($aAnswer, $sField);
+		var_dump(implode(" ", [$k, '$aAnswer', $sField]));
+	}
+	if (($k == (12 + $k_qclass + 5)) # CLASS
+		or ($k == (12 + $k_qclass + 6))){
+		array_push($aMessage['ANSWER']['CLASS'], base_convert($sField, 2, 16));
+		array_push($aAnswer, $sField);
+		var_dump(implode(" ", [$k, '$aAnswer', $sField]));
+	}
+	if (($k == (12 + $k_qclass + 7)) # TTL
+		or ($k == (12 + $k_qclass + 8))){
+		array_push($aMessage['ANSWER']['TTL'], base_convert($sField, 2, 16));
+		array_push($aAnswer, $sField);
+		var_dump(implode(" ", [$k, '$aAnswer', $sField]));
+	}
+	if (($k == (12 + $k_qclass + 9)) # RDLENGTH
+		or ($k == (12 + $k_qclass + 10))){
+		array_push($aMessage['ANSWER']['RDLENGTH'], base_convert($sField, 2, 16));
+		array_push($aAnswer, $sField);
+		var_dump(implode(" ", [$k, '$aAnswer', $sField]));
+	}
+	if (($k == (12 + $k_qclass + 11)) # RDATA
+		or ($k == (12 + $k_qclass + 12))){
+		array_push($aMessage['ANSWER']['RDATA'], base_convert($sField, 2, 16));
+		array_push($aAnswer, $sField);
+		var_dump(implode(" ", [$k, '$aAnswer', $sField]));
+	}
+	
 }
 
 
