@@ -24,6 +24,11 @@
 #rndc querylog
 #rndc querylog
 
-rndc-confgen -r /dev/urandom >  /etc/bind/rndc.conf
+#rndc-confgen -r /dev/urandom >  /etc/bind/rndc.conf
 
 #/etc/bind/rndc.conf nor /etc/bind/rndc.key
+
+#sudo apt install php-bcmath 
+
+which php
+php -i|grep 'php.ini'

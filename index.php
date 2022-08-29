@@ -40,7 +40,7 @@ $aHexString = array_map(function($sField) {
 }, str_split($sMessage));
 
 
-var_dump(['aBuffer', implode(" ", $aBuffer)]));
+var_dump(['aBuffer', implode(" ", $aBuffer)]);
 
 $aMessage = array(
 	'HEADER' => array(
@@ -146,6 +146,7 @@ foreach($aBuffer as $k => $sField)
 	}
 }
 
+var_dump(bcadd(12, 12, 0));
 
 /*
 																	1  1  1  1  1  1
@@ -165,10 +166,10 @@ $ik_label = -1;
 $aQuestion = array();
 foreach($aBuffer as $k => $sField)
 {
-	var_dump(implode(" ", ['$aQuestion', $k, ($k === (12 + $ikCount)), (12 + $ikCount)]));
+	var_dump(implode(" ", [bccomp($k, bcadd(12, $ikCount, 0), 0), '$aQuestion', $k, (bool) ($k === (12 + $ikCount)), bcadd(12, $ikCount, 0) ]));
 	
 	switch($k){
-		case ($k == (12 + $ikCount)): # domain length
+		case (bccomp($k, bcadd(12, $ikCount, 0), 0) ): # domain length
 			$iCount = (int) base_convert($sField, 2, 10);
 			if ($iCount == 0) $k_qtype = $ikCount + 1;
 			else $ikLength = $ikCount + 1;
