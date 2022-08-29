@@ -40,7 +40,7 @@ $aHexString = array_map(function($sField) {
 }, str_split($sMessage));
 
 
-var_dump(['aBuffer', implode($aBuffer)]);
+var_dump(['aBuffer', implode(" ", $aBuffer)]);
 
 $aMessage = array(
 	'HEADER' => array(
@@ -99,7 +99,7 @@ foreach($aBuffer as $k => $sField)
 		case 1:
 			array_push($aMessage['HEADER']['ID'], base_convert($sField, 2, 16));
 			array_push($aHeader, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aHeader' $sField]);
 		break;
 		case 2: #1 QR, 4 Opcode, 1 AA, 1 TC, 1 RD
 			$aFields = str_split($sField);
@@ -109,7 +109,7 @@ foreach($aBuffer as $k => $sField)
 			array_push($aMessage['HEADER']['TC'], base_convert($aFields[6], 2, 10));
 			array_push($aMessage['HEADER']['RD'], base_convert($aFields[7], 2, 10));
 			array_push($aHeader, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aHeader' $sField]);
 		break;
 		case 3: # 1 RA, 3 Z, 4 RCODE
 			$aFields = str_split($sField);
@@ -117,31 +117,31 @@ foreach($aBuffer as $k => $sField)
 			array_push($aMessage['HEADER']['Z'], ...array_map(function($sMapField) { return base_convert($sMapField, 2, 10); }, array_slice($aFields, 1, 3)) );
 			array_push($aMessage['HEADER']['RCODE'], ...array_map(function($sMapField) { return base_convert($sMapField, 2, 10); }, array_slice($aFields, 4, 4)) );
 			array_push($aHeader, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aHeader' $sField]);
 		break;
 		case 4: # QDCOUNT
 		case 5:
 			array_push($aMessage['HEADER']['QDCOUNT'], base_convert($sField, 2, 16));
 			array_push($aHeader, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aHeader' $sField]);
 		break;
 		case 6: # ANCOUNT
 		case 7:
 			array_push($aMessage['HEADER']['ANCOUNT'], base_convert($sField, 2, 16));
 			array_push($aHeader, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aHeader' $sField]);
 		break;
 		case 8: # NSCOUNT
 		case 9:
 			array_push($aMessage['HEADER']['NSCOUNT'], base_convert($sField, 2, 16));
 			array_push($aHeader, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aHeader' $sField]);
 		break;
 		case 10: # ARCOUNT
 		case 11:
 			array_push($aMessage['HEADER']['ARCOUNT'], base_convert($sField, 2, 16));
 			array_push($aHeader, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aHeader' $sField]);
 		break;
 	}
 }
@@ -172,7 +172,7 @@ foreach($aBuffer as $k => $sField)
 			else $ikLength = $ikCount + 1;
 			$ik_label = $ik_label + 1;
 			array_push($aQuestion, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aQuestion' $sField]);
 		break;
 		case ($k == (12 + $ikLength)): # QNAME
 			$iCount = $iCount - 1;
@@ -181,21 +181,21 @@ foreach($aBuffer as $k => $sField)
 			if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) $aMessage['QUESTION']['QNAME'][$ik_label] = array();
 			array_push($aMessage['QUESTION']['QNAME'][$ik_label], chr(base_convert($sField, 2, 10)));
 			array_push($aQuestion, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aQuestion' $sField]);
 		break;
 		case ($k == (12 + $k_qtype)):  # QTYPE
 		case ($k == (12 + $k_qtype + 1)):
 			$k_qclass = $k_qtype + 2;
 			array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
 			array_push($aQuestion, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aQuestion' $sField]);
 		break;
 		case ($k == (12 + $k_qclass)): # QCLASS
 		case ($k == (12 + $k_qclass + 1)): 
 			array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
 			$k_answer = $k_qclass + 1;
 			array_push($aQuestion, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aQuestion' $sField]);
 		break;
 	}
 }
@@ -231,37 +231,37 @@ foreach($aBuffer as $k => $sField)
 		case ($k == (12 + $k_qclass + 2)):
 			array_push($aMessage['ANSWER']['NAME'], base_convert($sField, 2, 16));
 			array_push($aAnswer, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aAnswer' $sField]);
 		break;
 		case ($k == (12 + $k_qclass + 3)): # TYPE
 		case ($k == (12 + $k_qclass + 4)):
 			array_push($aMessage['ANSWER']['TYPE'], base_convert($sField, 2, 16));
 			array_push($aAnswer, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aAnswer' $sField]);
 		break;
 		case ($k == (12 + $k_qclass + 5)): # CLASS
 		case ($k == (12 + $k_qclass + 6)):
 			array_push($aMessage['ANSWER']['CLASS'], base_convert($sField, 2, 16));
 			array_push($aAnswer, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aAnswer' $sField]);
 		break;
 		case ($k == (12 + $k_qclass + 7)): # TTL
 		case ($k == (12 + $k_qclass + 8)):
 			array_push($aMessage['ANSWER']['TTL'], base_convert($sField, 2, 16));
 			array_push($aAnswer, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aAnswer' $sField]);
 		break;
 		case ($k == (12 + $k_qclass + 9)): # RDLENGTH
 		case ($k == (12 + $k_qclass + 10)):
 			array_push($aMessage['ANSWER']['RDLENGTH'], base_convert($sField, 2, 16));
 			array_push($aAnswer, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aAnswer' $sField]);
 		break;
 		case ($k == (12 + $k_qclass + 11)): # RDATA
 		case ($k == (12 + $k_qclass + 12)):
 			array_push($aMessage['ANSWER']['RDATA'], base_convert($sField, 2, 16));
 			array_push($aAnswer, $sField);
-			var_dump([$k, $sField]);
+			var_dump([$k, '$aAnswer' $sField]);
 		break;
 	}
 }
@@ -321,6 +321,13 @@ array(3) {
 }
 
 00000000 00001010 00000000 00001000 10011110 11010101 00101111 00011101 00001011 11001101 11001001 11011011
+
+########
+
+"01010111 10010011 00000001 00100000 00000000 00000001 00000000 00000000 00000000 00000000 00000000 00000001 00000011 01110111 01110111 01110111 00001001 01110011 01110101 01101001 01110100 01100101 01111010 01101001 01100101 01101100 00000011 01
+100011 01101111 01101101 00000000 00000000 00000001 00000000 00000001 00000000 00000000 00101001 00010000 00000000 00000000 00000000 00000000 00000000 00000000 00001100 00000000 00001010 00000000 00001000 01111001 11110111 10001010 11111110 00010010 11000000 0
+0011001 00111000"
+
 
 */
 	
