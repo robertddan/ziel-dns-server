@@ -144,7 +144,7 @@ foreach($aBuffer as $k => $sField)
 			var_dump([$k, '$aHeader', $sField]);
 		break;
 	}
-
+}
 
 
 /*
@@ -163,7 +163,8 @@ foreach($aBuffer as $k => $sField)
 $ikCount = $ikLength = $iCount = $k_qtype = $k_qclass = 0;
 $ik_label = -1;
 $aQuestion = array();
-
+foreach($aBuffer as $k => $sField)
+{
 	switch($k){
 		case ($k == (12 + $ikCount)): # domain length
 			$iCount = (int) base_convert($sField, 2, 10);
