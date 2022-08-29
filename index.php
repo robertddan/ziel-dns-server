@@ -165,12 +165,12 @@ $aQuestion = array();
 foreach($aBuffer as $k => $sField)
 {
 	
-var_dump([$k, bccomp($k, bcadd(12, $ikCount, 0), 0), (bccomp($k, bcadd(12, $ikCount, 0), 0) == 0)]);
+var_dump([$k, bccomp($k, bcadd(12, $ikCount, 0), 0), (bccomp($k, 12, 0) == 0)]);
 	
 	switch($k){
-		case (bccomp($k, bcadd(12, $ikCount, 0), 0) == 0): # domain length
+		case ((bccomp($k, 12, 0) == 0)): # domain length
 			
-var_dump(bccomp($k, bcadd(12, $ikCount, 0), 0));
+var_dump([$k, bccomp($k, 12, 0), (bccomp($k, 12, 0) == 0)]);
 			
 			$iCount = (int) base_convert($sField, 2, 10);
 			if ($iCount == 0) $k_qtype = $ikCount + 1;
