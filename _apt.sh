@@ -30,5 +30,9 @@
 
 #sudo apt install php-bcmath 
 
-which php
-php -i|grep 'php.ini'
+#which php
+#php -i|grep 'php.ini'
+
+
+	
+sudo apt install php7.3-bcmath

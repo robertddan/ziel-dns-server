@@ -146,8 +146,6 @@ foreach($aBuffer as $k => $sField)
 	}
 }
 
-var_dump(bcadd(12, 12, 0));
-
 /*
 																	1  1  1  1  1  1
 		0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -166,10 +164,14 @@ $ik_label = -1;
 $aQuestion = array();
 foreach($aBuffer as $k => $sField)
 {
-	var_dump(implode(" ", [bccomp($k, bcadd(12, $ikCount, 0), 0), '$aQuestion', $k, (bool) ($k === (12 + $ikCount)), bcadd(12, $ikCount, 0) ]));
+	
+var_dump([$k, bccomp($k, bcadd(12, $ikCount, 0), 0), (bccomp($k, bcadd(12, $ikCount, 0), 0) == 0)]);
 	
 	switch($k){
-		case (bccomp($k, bcadd(12, $ikCount, 0), 0) ): # domain length
+		case (bccomp($k, bcadd(12, $ikCount, 0), 0) == 0): # domain length
+			
+var_dump(bccomp($k, bcadd(12, $ikCount, 0), 0));
+			
 			$iCount = (int) base_convert($sField, 2, 10);
 			if ($iCount == 0) $k_qtype = $ikCount + 1;
 			else $ikLength = $ikCount + 1;
@@ -177,7 +179,7 @@ foreach($aBuffer as $k => $sField)
 			array_push($aQuestion, $sField);
 			var_dump(implode(" ", [$k, '$aQuestion 1', $sField]));
 		break;
-		case ($k == (12 + $ikLength)): # QNAME
+		case ((bccomp($k, bcadd(12, $ikLength, 0), 0) == 0)): # QNAME
 			$iCount = $iCount - 1;
 			$ikLength = $ikLength + 1;
 			if ($iCount == 0) $ikCount = $ikLength;
@@ -186,15 +188,15 @@ foreach($aBuffer as $k => $sField)
 			array_push($aQuestion, $sField);
 			var_dump(implode(" ", [$k, '$aQuestion 2', $sField]));
 		break;
-		case ($k == (12 + $k_qtype)):  # QTYPE
-		case ($k == (12 + $k_qtype + 1)):
+		case ((bccomp($k, bcadd(12, $k_qtype, 0), 0) == 0)):  # QTYPE
+		case ((bccomp($k, bcadd(12, bcadd(1, $k_qtype, 0), 0), 0) == 0)):
 			$k_qclass = $k_qtype + 2;
 			array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
 			array_push($aQuestion, $sField);
 			var_dump(implode(" ", [$k, '$aQuestion 3', $sField]));
 		break;
-		case ($k == (12 + $k_qclass)): # QCLASS
-		case ($k == (12 + $k_qclass + 1)): 
+		case (0 == bccomp($k, bcadd(12, $k_qclass, 0), 0)): # QCLASS
+		case (0 == bccomp($k, bcadd(12, bcadd(1, $k_qclass, 0), 0), 0)): 
 			array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
 			$k_answer = $k_qclass + 1;
 			array_push($aQuestion, $sField);
