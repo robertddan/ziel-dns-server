@@ -3,26 +3,22 @@
 $sIp = "127.0.0.1";
 $iPort = 53;
 
-
-$sMsg = "Ping !";
-$iLen = strlen($sMsg);
-
 $rSocket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
 socket_set_option($rSocket, SOL_SOCKET, SO_BROADCAST, 1);
 socket_connect($rSocket, $sIp, $iPort);
 
 $i = 0;
 while(true){
-	#socket_send($rSocket, $sMsg, $iLen, 0);
-	#var_dump($sMsg);
-	#socket_sendto($rSocket, $sMsg, $iLen, 0, $sIp, $iPort); 
-	$send = socket_sendto($rSocket, $sMsg, $iLen, 0, $sIp, $iPort);
-	var_dump($send);
+	$sMsg = 'client_'.$i." ".date('Y-m-d H:i:s');
+	$iLen = strlen($sMsg);
+	socket_sendto($rSocket, $sMsg, $iLen, 0, $sIp, $iPort);
+	var_dump(implode(" ", ['$sMsg_send_to_server ', $sMsg]));
 	
-	socket_recvfrom($rSocket, $sMsg, $iLen, 0, $sIp, $iPort);
-	var_dump($sMsg);
-	sleep(1);
+	socket_recvfrom($rSocket, $sMsgReceive, $iLen, 0, $sIp, $iPort);
+	var_dump(implode(" ", ['$sMsgReceive_in_client', $sMsgReceive]));
+	
 	$i = $i + 1;
+	sleep(2);
 }
 
 
