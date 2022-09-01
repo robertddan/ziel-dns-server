@@ -164,9 +164,7 @@ $ik_label = -1;
 $aQuestion = array();
 foreach($aBuffer as $k => $sField)
 {
-	
-	var_dump(array($k, bccomp($k, bcadd(12, $ikCount, 0), 0), bccomp($k, bcadd(12, $ikCount, 0), 0)===0));
-	
+	if ($k < 12) continue;
 	switch($k){
 		case ((bool)false): # domain length
 			var_dump(implode(" ", [$k, '$aQuestion 0', $sField]));
@@ -230,6 +228,7 @@ foreach($aBuffer as $k => $sField)
 $aAnswer = array();
 foreach($aBuffer as $k => $sField)
 {
+	if ($k < 12) continue;
 	switch($k){
 		case (($k == (12 + $k_answer + 1)) || ($k == (12 + $k_qclass + 2))): # NAME
 			array_push($aMessage['ANSWER']['NAME'], base_convert($sField, 2, 16));
