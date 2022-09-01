@@ -164,11 +164,47 @@ $ik_label = -1;
 $aQuestion = array();
 foreach($aBuffer as $k => $sField)
 {
+	switch($k){
+		case (bccomp($k, bcadd(12, $ikCount, 0), 0) == 0): # domain length
+			$iCount = (int) base_convert($sField, 2, 10);
+			if ($iCount == 0) { $k_qtype = $ikCount + 1; $ikLength = count($aBuffer) + 1; }
+			else $ikLength = $ikCount + 1;
+			$ik_label = $ik_label + 1;
+			if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) $aMessage['QUESTION']['QNAME'][$ik_label] = array();
+			array_push($aMessage['QUESTION']['QNAME'][$ik_label], base_convert($sField, 2, 10));
+			array_push($aQuestion, $sField);
+			var_dump(implode(" ", [$k, '$aQuestion 1', $sField]));
+		break;
+		case (bccomp($k, bcadd(12, $ikLength, 0), 0) == 0): # QNAME	
+			$iCount = $iCount - 1;
+			$ikLength = $ikLength + 1;
+			if ($iCount == 0) $ikCount = $ikLength;
+			array_push($aMessage['QUESTION']['QNAME'][$ik_label], chr(base_convert($sField, 2, 10)));
+			array_push($aQuestion, $sField);
+			var_dump(implode(" ", [$k, '$aQuestion 2', $sField]));
+		break;
+		case ((bccomp($k, bcadd(12, $k_qtype, 0), 0) == 0) || (bccomp($k, bcadd(12, bcadd(1, $k_qtype, 0), 0), 0) == 0)): # QTYPE
+			$k_qclass = $k_qtype + 2;
+			array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
+			array_push($aQuestion, $sField);
+			var_dump(implode(" ", [$k, '$aQuestion 3333', '$sField', $sField, 'k_pe', $k_qtype, ]));
+		break;
+		case ((bccomp($k, bcadd(12, $k_qclass, 0), 0) == 0) || (bccomp($k, bcadd(12, bcadd(1, $k_qclass, 0), 0), 0) == 0)): # QCLASS
+			array_push($aMessage['QUESTION']['QCLASS'], base_convert($sField, 2, 16));
+			$k_answer = $k_qclass + 1;
+			array_push($aQuestion, $sField);
+			var_dump(implode(" ", [$k, '$aQuestion 4', $sField]));
+		break;
+	}
+	
+/*
 	if (bccomp($k, bcadd(12, $ikCount, 0), 0) == 0) { # domain length
 		$iCount = (int) base_convert($sField, 2, 10);
-		if ($iCount == 0) {$k_qtype = $ikCount + 1; $ikLength = count($aBuffer) + 1;}
+		if ($iCount == 0) { $k_qtype = $ikCount + 1; $ikLength = count($aBuffer) + 1; }
 		else $ikLength = $ikCount + 1;
 		$ik_label = $ik_label + 1;
+		if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) $aMessage['QUESTION']['QNAME'][$ik_label] = array();
+		array_push($aMessage['QUESTION']['QNAME'][$ik_label], base_convert($sField, 2, 10));
 		array_push($aQuestion, $sField);
 		var_dump(implode(" ", [$k, '$aQuestion 1', $sField]));
 	}
@@ -177,7 +213,6 @@ foreach($aBuffer as $k => $sField)
 		$iCount = $iCount - 1;
 		$ikLength = $ikLength + 1;
 		if ($iCount == 0) $ikCount = $ikLength;
-		if (!isset($aMessage['QUESTION']['QNAME'][$ik_label])) $aMessage['QUESTION']['QNAME'][$ik_label] = array();
 		array_push($aMessage['QUESTION']['QNAME'][$ik_label], chr(base_convert($sField, 2, 10)));
 		array_push($aQuestion, $sField);
 		var_dump(implode(" ", [$k, '$aQuestion 2', $sField]));
@@ -187,7 +222,7 @@ foreach($aBuffer as $k => $sField)
 		$k_qclass = $k_qtype + 2;
 		array_push($aMessage['QUESTION']['QTYPE'], base_convert($sField, 2, 16));
 		array_push($aQuestion, $sField);
-		var_dump(implode(" ", [$k, '$aQuestion 3', $sField]));
+		var_dump(implode(" ", [$k, '$aQuestion 3333', '$sField', $sField, 'k_pe', $k_qtype, ]));
 	}
 
 	if ((bccomp($k, bcadd(12, $k_qclass, 0), 0) == 0) || (bccomp($k, bcadd(12, bcadd(1, $k_qclass, 0), 0), 0) == 0)) { # QCLASS
@@ -196,6 +231,7 @@ foreach($aBuffer as $k => $sField)
 		array_push($aQuestion, $sField);
 		var_dump(implode(" ", [$k, '$aQuestion 4', $sField]));
 	}
+*/
 }
 
 
