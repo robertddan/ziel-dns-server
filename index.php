@@ -166,9 +166,6 @@ foreach($aBuffer as $k => $sField)
 {
 	if ($k < 12) continue;
 	switch($k){
-		case ((bool)false): # domain length
-			var_dump(implode(" ", [$k, '$aQuestion 0', $sField]));
-		break;
 		case (bccomp($k, bcadd(12, $ikCount, 0), 0) === 0): # domain length
 			$iCount = (int) base_convert($sField, 2, 10);
 			if ($iCount == 0) { $k_qtype = $ikCount + 1; $ikLength = count($aBuffer) + 1; }
