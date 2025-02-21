@@ -1,0 +1,30 @@
+cron\console
+scheduler\task
+dispatcher\pid
+pipeline:
+-server\http
+-server\ssh
+
+
+
+Pipeline:
+$process = (new Pipeline)
+    ->pipe([new RegistratorLog, 'register'])
+    ->pipe([new NotificationSms, 'notification'])
+    ->pipe([new NotificationEmail, 'notification']);
+
+$result = $process->process( new Order() );
+
+#-view
+#--session
+#-router
+#--event
+#--user
+#--model
+#-scheduler
+#----
+
+/*
+-exclude every time to include files instead use cache
+-
+*/

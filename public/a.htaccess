@@ -1,0 +1,13 @@
+<?php
+var_dump($_GET);
+define("DS", DIRECTORY_SEPARATOR);
+define("ROOT", __DIR__ . DS);
+define("CONFIG", __DIR__ . DS . "config" . DS);
+define("DRAFT", __DIR__ . DS . "draft" . DS);
+define("VENDOR", __DIR__ . DS . "vendor" . DS);
+
+include(CONFIG . DS . 'bootstrap.php');
+
+if (!Dispatcher::threads()) die('dispatcher_threads()');
+
+?>

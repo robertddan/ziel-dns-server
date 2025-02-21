@@ -1,0 +1,23 @@
+{
+    "name": "root/ziel-net",
+    "description": "Ziel threads, http and dns servers",
+    "type": "project",
+    "autoload": {
+        "psr-4": { 
+            "Ziel\\": ["draft"]
+        }
+    },
+    "authors": [
+        {
+            "name": "Robert-Dan Dumitrascu",
+            "email": "robertddanedu@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        
+    },
+    "license": [
+        "AGPL-3.0-only"
+    ]
+}
