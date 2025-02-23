@@ -8,7 +8,6 @@ define('VENDOR', ROOT . 'vendor' . DS);
 
 require(CONFIG . DS . 'bootstrap.php');
 
-
 function router_redirect($aRoute = array())
 {
     $aRouter = array();
