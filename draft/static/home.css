@@ -1,0 +1,17 @@
+body {
+    max-width: 100%;
+}
+
+table {
+    /*background-color: #6495ED;*/
+}
+
+.stripe {
+    background-color: lavender;
+    padding: 2rem 0;
+}
+.stripe__content {
+    width: 90vw;
+    max-width: 1200px;
+    margin: auto;
+}

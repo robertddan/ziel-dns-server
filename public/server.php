@@ -1,33 +1,13 @@
 <?php
-/*
-Docker containers
 
-
-*/
-
-function exception_handler (Throwable $exception) {
-    print PHP_EOL. $exception->getMessage() .PHP_EOL.
-    "On file: ".$exception->getFile() .PHP_EOL.
-    "On line: ". $exception->getLine() .PHP_EOL.
-    $exception->getTraceAsString() .PHP_EOL;
-}
-
-function throw_exception ($sException) {
-    throw new Exception($sException);
-}
-
-set_exception_handler('exception_handler');
-
-define("DS", DIRECTORY_SEPARATOR);
-define("ROOT", __DIR__ . DS . '..' . DS);
-define("CONFIG", ROOT . DS . "config" . DS);
-define("DRAFT", ROOT . DS . "draft" . DS);
-define("VENDOR", ROOT . DS . "vendor" . DS);
+define('DS', DIRECTORY_SEPARATOR);
+chdir(__DIR__ . DS . '..' . DS);
+define('ROOT', getcwd() . DS);
+define('CONFIG', ROOT . 'config' . DS);
+define('VENDOR', ROOT . 'vendor' . DS);
 
 require(CONFIG . DS . 'bootstrap.php');
 
-#var_dump(base64_encode(pack("H*", sha1('NnRlZW4gYnl0ZXMgbG9uZw==258EAFA5-E914-47DA-95CA-C5AB0DC85B11'))));
-#if (!Ziel\Dispatcher::threads()) throw_exception('dispatcher_threads()');
 
 function router_redirect($aRoute = array())
 {
@@ -81,45 +61,19 @@ switch ($aRouter['host']) {
 
 
 $aWidget['html'] = '';
-#$aWidget['html'] .= '<!--- doctype -->';
-#$aWidget['html'] .= '<!doctype html>';
 $aWidget['html'] .= '<!--- html -->';
 $aWidget['html'] .= '<html class="">';
-
 $aWidget['html'] .= '<!--- head -->';
 $aWidget['html'] .= '<head>';
 $aWidget['html'] .= '<meta charset="utf-8">';
-/*
-<!-- Startup configuration -->
-<link rel="manifest" href="manifest.webmanifest">
-
-<!-- Fallback application metadata for legacy browsers -->
-<meta name="application-name" content="Racer3K">
-<link rel="icon" sizes="16x16 32x32 48x48" href="lo_def.ico">
-<link rel="icon" sizes="512x512" href="hi_def.png">
-*/
-#$aWidget['html'] .= '<title>'. $aPage['title'] .'</title>';
-#$aWidget['html'] .= '<script type="text/javascript" src="/script/home.js"></script>';
 $aWidget['html'] .= '<style>.loader { border: 16px solid #f3f3f3; /* Light grey */ border-top: 16px solid #3498db; /* Blue */ border-radius: 50%; width: 60px; height: 60px; animation: spin 2s linear infinite; position: absolute; top: 50%; left: 50%; margin-left: -20px; margin-top: -20px; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } .hidden { display: none; }</style>';
-#$aWidget['html'] .= '<link rel="manifest" href="/app.webmanifest">';
 $aWidget['html'] .= '</head>';
 $aWidget['html'] .= '<!--- /head -->';
 $aWidget['html'] .= '<!--- body -->';
 $aWidget['html'] .= '<body>';
 $aWidget['html'] .= $aPage['content'];
-
 $aWidget['html'] .= '<div id="loader-wrapper"><div id="loader" class="loader"></div></div>';
-#$aWidget['html'] .= '<button id="file-handle">button</button>';
-#$aWidget['html'] .= '<div id="sse"><a href="javascript:WebSocketSend()">send WebSocket</a></div>';
-#$aWidget['html'] .= $aWidget['events'];
-#$aWidget['html'] .= $aPage['content'];
-
-$aWidget['html'] .= '<footer>
-ziel--ide © [YEAR OF PUBLICATION] [WEBSITE NAME]. All rights reserved.
-<br/>
-<div id="root"></div>
-</footer>';
-
+$aWidget['html'] .= '<footer>ziel--ide © [YEAR OF PUBLICATION] [WEBSITE NAME]. All rights reserved.<br/><div id="root"></div></footer>';
 $aWidget['html'] .= '</body>';
 $aWidget['html'] .= '<!--- /body -->';
 $aWidget['html'] .= '<!--- /html -->';
@@ -141,27 +95,6 @@ else {
 ?>
 
 <script>
-/*
-let socket = new WebSocket("ws://127.0.0.1:44321/public/agent.php");
-
-var socketOpen = (e) => {
-    console.log("connected to the socket");
-    var joinMsg = {
-        type: "join",
-        sender: 'sender',
-        text: 'joined the chat!'
-    };
-    socket.send(JSON.stringify(joinMsg));
-}
-
-var socketMessage = (e) => {
-    console.log(`Message from socket server: ${e.data}`);
-}
-
-socket.addEventListener("open", socketOpen);
-socket.addEventListener("message", socketMessage);
-*/
-
 
 let menu = {
     onInit: function() {

@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Suiteziel\Http\Server\View;
+namespace Ziel\Http\Server\View;
 
-use App\Suiteziel\Framework\View;
-use App\Suiteziel\Http\Server\Controller\Controller_tasks;
+use Ziel\Framework\View;
+use Ziel\Http\Server\Controller\Controller_tasks;
 
+/*
 # GraphQL
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
-
+*/
 
 class View_server extends View {
 

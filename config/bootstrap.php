@@ -13,7 +13,7 @@ function throw_exception ($sException) {
 
 set_exception_handler('exception_handler');
 
-require(VENDOR . DS . "autoload.php");
+require(VENDOR . "autoload.php");
 
 #$loader = require __DIR__ .'/../vendor/autoload.php';
 #define('VAR_DIR', __DIR__ .'/../../var/');

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Suiteziel\Http\Server\Controller;
+namespace Ziel\Http\Server\Controller;
 
-use App\Suiteziel\Framework\Controller;
+use Ziel\Framework\Controller;
 
 
 class Controller_tasks extends Controller

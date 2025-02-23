@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Suiteziel\Http\Server\Command;
+namespace Ziel\Http\Server\Command;
 
-use App\Suiteziel\Framework\Command;
-use App\Suiteziel\Http\Server\Controller\Controller_tasks;
+use Ziel\Framework\Command;
+use Ziel\Http\Server\Controller\Controller_tasks;
 
 /*
  * Command to run the server:
