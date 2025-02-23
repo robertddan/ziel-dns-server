@@ -11,7 +11,7 @@ class Home {
         $aPage['content'] = $aPage['script'] = $aPage['projekt'] = '';
         $aPage['title'] = '🔆 Home';
         $aPage['projekt'] = '<br/>🩹Projekt: Ziel-IDE';
-        $aPage['content'] .= <<<EOD
+        $aPage['stylesheet'] = <<<CSSSTYLE
 <style>
 body {
 	font-family: 'Calibri', sans-serif;
@@ -126,8 +126,15 @@ footer {
 	padding: 7px 14px;
 }
 
-
 </style>
+CSSSTYLE;
+
+        $aPage['javascript'] = <<<JSSCRIPT
+<script>
+<script/>
+JSSCRIPT;
+
+        $aPage['content'] .= <<<CONTENT
 
 <header>
 <div class="menu">
@@ -171,7 +178,7 @@ footer {
     </div>
 </main>
 
-EOD;
+CONTENT;
 
         return true;
     }
