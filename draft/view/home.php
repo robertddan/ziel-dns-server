@@ -183,7 +183,7 @@ fputs($fp, "hello\n");
 
 // Read what we have written.
 rewind($fp);
-echo stream_get_contents($fp);
+$aPage['content'] .= stream_get_contents($fp);
 
 
         $aPage['content'] .= <<<CONTENT
