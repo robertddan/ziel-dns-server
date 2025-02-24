@@ -135,7 +135,6 @@ CSSSTYLE;
 JSSCRIPT;
 
         $aPage['content'] .= <<<CONTENT
-
 <header>
 <div class="menu">
     <ul>
@@ -173,12 +172,29 @@ JSSCRIPT;
     </div>
     <div class="middle">
         <div id="content">
+CONTENT;
+
+
+// Set the limit to 5 MB.
+$fiveMBs = 5 * 1024 * 1024;
+$fp = fopen("php://temp/maxmemory:$fiveMBs", 'r+');
+
+fputs($fp, "hello\n");
+
+// Read what we have written.
+rewind($fp);
+echo stream_get_contents($fp);
+
+
+        $aPage['content'] .= <<<CONTENT
             content
         </div>
     </div>
 </main>
 
 CONTENT;
+
+
 
         return true;
     }
