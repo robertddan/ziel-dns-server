@@ -131,7 +131,7 @@ CSSSTYLE;
 
         $aPage['javascript'] = <<<JSSCRIPT
 <script>
-<script/>
+</script>
 JSSCRIPT;
 
         $aPage['content'] .= <<<CONTENT
